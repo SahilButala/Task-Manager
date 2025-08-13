@@ -5,11 +5,10 @@ const todoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-   completed : {
-    type : Boolean,
+  completed: {
+    type: Boolean,
     required: true,
-   }
-
+  },
 });
 
 const TaskSchema = new mongoose.Schema(
@@ -56,7 +55,6 @@ const TaskSchema = new mongoose.Schema(
   }
 );
 
-
-const TaskModel = mongoose.model.Task || mongoose.model("Task" , TaskSchema)
+const TaskModel = mongoose.model.Task || mongoose.model("Task", TaskSchema);
 
 export default TaskModel;
