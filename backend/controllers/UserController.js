@@ -1,55 +1,48 @@
-import jwt from "jsonwebtoken";
-import bcryptjs from "bcryptjs";
-import User from "../models/User_Model.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiRes } from "../utils/ApiRes.js";
+import { catchAsync } from "../utils/catchAsync.js"
+import User from "../models/User_Model.js"
+import Task from "../models/Task_model.js"
+import { ApiRes } from "../utils/ApiRes.js"
 
-const jwtSignin =  (id, role) => {
-  console.log(id, "sasasasasasa", role, "++++++++++++++++++++++++++++++++");
-  return jwt.sign({ _id: id, role }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
-};
 
-// Register controller
-const RegisterUser = catchAsync(async (req, res) => {
-  const { name, email, password, profileImageUrl, adminInviteToken } = req.body;
-  // checking user is already exsist
-  const userExsist = await User.findOne({ email });
 
-  if (userExsist) {
-    throw new ApiError(404, "User already exsist");
-  }
 
-  let role = "member";
-  if (adminInviteToken && adminInviteToken === process.env.ADMIN_INVITE_TOKEN) {
-    role = "admin";
-  }
+const getUsers = catchAsync(async (req , res)=>{
+      const users = await User.find({role : "member"}).select("-password")
 
-  // hash password
-  const hashpassword = await bcryptjs.hash(password, 10);
-  const user = await User.create({
-    name,
-    password: hashpassword,
-    profileImageUrl,
-    email,
-    role,
-  });
+      console.log(users)
 
-  let token =  jwtSignin(user?._id, user?.role)
+      // add task to each user
+      const userWithTaskCounts = await Promise.all(users.map(async (user)=>{
+           const pendingTask = await Task.countDocuments({assignedTo : user?._id , status : "Pending"})
 
-  res .status(201).json(
-      new ApiRes(true, "Register successfully..", {
-        ...user?._doc,
-        token
-      })
-    );
-});
-// login controller
-const LoginUser = catchAsync(async (req, res) => {});
-//  get user profile
-const getuserProfile = catchAsync(async (req, res) => {});
-// update this url
-const updateUserprofile = catchAsync(async (req, res) => {});
-export { RegisterUser, LoginUser, getuserProfile, updateUserprofile };
+           const inprogressTask = await Task.countDocuments({assignedTo : user?._id  , status : "In Progress"})
+
+           const CompleteTask = await Task.countDocuments({assignedTo : user?._id  , status : "Completed"})
+
+           return {
+            ...user?._doc,
+            pendingTask,
+            inprogressTask,
+            CompleteTask
+           }
+      }))
+
+      res.status(200).json(new ApiRes(true , 'data' , userWithTaskCounts))
+})
+
+const getUserByid = catchAsync(async (req , res)=>{
+          const {id} = req.params
+
+          const user = await User.findById(id).select("-password")
+
+          if(!user){
+            return res.status(404).json(new ApiRes(false , "user not found"))
+          }
+
+          res.status(200).json(new ApiRes(true , "User fetch successfully.." , user))
+})
+
+
+
+export {getUserByid , getUsers , }
+
