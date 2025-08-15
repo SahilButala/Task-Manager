@@ -5,7 +5,79 @@ import { ApiRes } from "../utils/ApiRes.js";
 
 // create task
 
-const getDashboardData = catchAsync(async (req, res) => {});
+const getDashboardData = catchAsync(async (req, res) => {
+      const totaltask = await Task.countDocuments()
+      const pendingTasks = await Task.countDocuments({status : "Pending"})
+      const completedTask = await Task.countDocuments({status : "Completed"})
+      const inProgressTask = await Task.countDocuments({status : "In Progress"})
+
+      const overdueTask  = await Task.countDocuments({
+         status : {$ne : "Completed"},
+         dueDate : {$lt : new Date()} // means if task is created yesterday then show overdue 
+      })
+
+      // ensure that all posibble status are included 
+      const  taskStatus = ["Pending" , "In Progress" , "Completed"]
+
+      const taskDistribrutionRaw = await Task.aggregate([
+        {
+          $group : {
+            _id : "$status",
+            count : {$sum : 1}
+          }
+        }
+      ])
+
+      const taskDistribution = taskStatus.reduce((acc , status)=>{
+                const formattedkey = status.replace(/\s+/g , "") // remove spaces from response key
+
+                acc[formattedkey] = taskDistribrutionRaw.find((item)=> item?._id === status)?.count || 0
+
+                return acc
+      } , {})
+taskDistribution["All"]  = totaltask
+
+
+// ensure that all possible priority is incuded
+
+const Taskpriority = ["Low" , "High" , "Medium"]
+
+const TaskpriorityLevelRaw = await Task.aggregate([
+   {
+     $group : {
+        _id : "$priority",
+        count : {$sum : 1}
+     }
+   }
+])
+
+
+const taskprioritylevels = Taskpriority.reduce((acc , priority)=> {
+     acc[priority] = TaskpriorityLevelRaw.find((item)=> item?._id ===   priority)?.count || 0
+     return acc
+} , {})
+
+
+// fetch top 10 recent task
+
+const recentTask = await Task.find().sort({createdAt : -1}).limit(10).select("title priority status dueDate createdAt")
+
+res.status(200).json(new ApiRes(true , "Data fetch successfully..." , {
+    statistics  : {
+      totaltask,
+      pendingTasks,
+      completedTask,
+      overdueTask
+    },
+    charts : {
+      taskDistribution,
+      taskprioritylevels
+    },
+    recentTask
+}))
+
+
+});
 const getuserDashboardData = catchAsync(async (req, res) => {});
 const getTaks = catchAsync(async (req, res) => {
   const { status } = req.query;
@@ -160,10 +232,10 @@ const updateTaskStatus = catchAsync(async (req, res) => {
   const isAssigned = task.assignedTo.some(
     (userid) => userid.toString() === req?.user?._id.toString()
   );
-  
+
   console.log(isAssigned, "sasasasasa");
-  
-    // if task is not assigned any user then it will unauthorized
+
+  // if task is not assigned any user then it will unauthorized
   if (!isAssigned && req?.user?.role !== "admin") {
     return res.status(403).json(new ApiRes(false, "unauthorized"));
   }
@@ -178,7 +250,50 @@ const updateTaskStatus = catchAsync(async (req, res) => {
   await task.save();
   res.status(200).json(new ApiRes(true, "status updated", task));
 });
-const updateTaskChecklist = catchAsync(async (req, res) => {});
+const updateTaskChecklist = catchAsync(async (req, res) => {
+  const { todoChecklist } = req.body;
+  const task = await Task.findById(req?.params?.id);
+
+  if (!task) {
+    return res.status(404).json(new ApiRes(true, "task not found "));
+  }
+
+  if (!task.assignedTo.includes(req.user?._id) && req.user?.role !== "admin") {
+    return new ApiRes(false, "unauthorzied");
+  }
+
+  task.todoChecklist = Array.isArray(todoChecklist)
+    ? todoChecklist
+    : task.todoChecklist || [];
+
+  // auto-update progress based on checklist completion
+
+  const completedCount = task.todoChecklist.filter(
+    (item) => item.completed
+  ).length;
+  const totalItems = task.todoChecklist.length;
+
+  task.progress =
+    totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
+
+  //  auto-marked task as completed if all items are checked
+
+  if (task.progress === 100) {
+    task.status = "Completed";
+  } else if (task.progress > 0) {
+    task.status = "In Progress";
+  } else {
+    task.status = "Pending";
+  }
+
+  await task.save();
+  const updatedTask = await Task.findById(req.params?.id).populate(
+    "assignedTo",
+    "name email profileImageUrl"
+  );
+
+  res.status(200).json(new ApiRes(true, "fetch successfully..", updatedTask));
+});
 const updateTask = catchAsync(async (req, res) => {
   const { id } = req.params;
 
