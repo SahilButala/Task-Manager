@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+.blue{
+    @apply text-blue-400
+}
+
+.input-box{
+    @apply w-full flex justify-between gap-3 text-sm text-black rounded py-3 px-4 mb-4 mt-3 border border-slate-300 outline-none
+}
+
+.btn-primary{
+    @apply w-full text-sm font-medium text-white bg-blue-400 shadow-lg shadow-purple-600/5 p-[10px] rounded-md my-1 hover:text-blue-600 cursor-pointer hover:bg-slate-300 transition-all
+}
