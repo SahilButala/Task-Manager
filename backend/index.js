@@ -3,9 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { DatabaseConnection } from "./controllers/db/Database.js";
-import { errorhandler } from "./utils/Errorhandler.js";
 import router from "./routes/main.js";
-
+import  {errorhandler} from "./utils/Errorhandler.js"
 dotenv.config();
 
 const app = express();
@@ -35,8 +34,8 @@ app.listen(PORT, (req, res) => {
 
 app.get("/", (req, res) => {
   res.send(`Server running at port ${PORT}`);
-  // throw new Error("sasasa")
 });
 
-// global error handaling
+
+// global error handling 
 app.use(errorhandler);

@@ -47,23 +47,23 @@ const RegisterUser = catchAsync(async (req, res) => {
   );
 });
 // login controller
-const LoginUser = catchAsync(async (req, res) => {
+const LoginUser = catchAsync(async (req, res ,next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(404).json(new ApiRes(false, "invalid credentials"));
+    return next((new ApiError(404, "invalid credentials")));
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(404).json(new ApiRes(false, "User is not exsist"));
+    return next(new ApiError(404, "User is not exists"));
   }
 
   const isPassCorrect = await bcryptjs.compare(password, user?.password);
 
   if (!isPassCorrect) {
-    return res.status(404).json(new ApiRes(false, "invalid password"));
+    return next(new ApiError(404, "invalid password"));
   }
 
   const token = jwtSignin(user?._id, user?.role);
