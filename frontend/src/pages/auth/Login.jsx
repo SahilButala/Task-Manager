@@ -5,48 +5,33 @@ import { Link, useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../../helper/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { apiPaths } from "../../constants";
+import { getLogin } from "../../store/Slice/User";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
   const [error, seterror] = useState("");
   const navigate = useNavigate();
+  
 
+  const dispatch = useDispatch();
+  const {user} = useSelector(state=>state.auth)
+
+
+
+  const [formdata, setformdata] = useState({
+    email: "",
+    password: "",
+  });
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
+    if (!validateEmail(formdata.email)) {
       seterror("Please enter a valid email");
       return;
     }
 
-    // if (!validatePassword(password)) {
-    //   seterror(
-    //     "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"
-    //   );
-    //   return;
-    // }
-
     try {
-      const res = await axiosInstance.post(apiPaths.AUTH.LOGIN, {
-        email,
-        password,
-      });
-
-      if (res.data["sucess"] === true) {
-        const { token, role } = res?.data?.data;
-
-        localStorage.setItem("token", token);
-        console.log(role);
-
-        //redirect based on role
-
-        if (role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
-        }
-      }
+      dispatch(getLogin({formdata , navigate}));
     } catch (error) {
       if (error.response && error.response.data.message) {
         seterror(error.response.data.message);
@@ -72,17 +57,29 @@ const Login = () => {
           {/* email  feild*/}
           <Input
             type={"email"}
+            value={formdata.email}
             placeholader={"Enter the email"}
             label={"Enter the email"}
-            onChange={({ target }) => setemail(target.value)}
+            onChange={({ target }) =>
+              setformdata({
+                ...formdata,
+                email: target.value,
+              })
+            }
           />
 
           {/* password feild */}
           <Input
             type={"password"}
+            value={formdata.password}
             label={"Enter the password"}
             placeholader={"Enter the password"}
-            onChange={({ target }) => setpassword(target.value)}
+            onChange={({ target }) =>
+              setformdata({
+                ...formdata,
+                password: target.value,
+              })
+            }
           />
 
           {error && <div className="text-red-500 text-xs pb-2.5">{error}</div>}

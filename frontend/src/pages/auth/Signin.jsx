@@ -4,6 +4,7 @@ import { validateEmail, validatePassword } from "../../helper/helper";
 import Input from "../../helper/input/Input";
 import { Link } from "react-router-dom";
 import ProfilePhotoSelector from "../../components/auth/ProfilePhotoSelector";
+import { initialRegisterData } from "../../config";
 
 const SignUp = () => {
   const [email, setemail] = useState("");
@@ -12,24 +13,26 @@ const SignUp = () => {
   const [error, seterror] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
 
-  const [adminToken, setadminToken] = useState('')
+  const [adminToken, setadminToken] = useState("");
+
+  const [formdata, setformdata] = useState(initialRegisterData);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
+    if (!validateEmail(formdata.email)) {
       seterror("Please enter a valid email");
       return;
     }
 
-    if (!validatePassword(password)) {
-      seterror(
-        "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"
-      );
-      return;
-    }
+    // if (!validatePassword(formdata.password)) {
+    //   seterror(
+    //     "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"
+    //   );
+    //   return;
+    // }
 
-    console.log("login api heated ... . . . .");
+    console.log("login api heated ... . . . .", formdata);
   };
 
   return (
@@ -48,8 +51,9 @@ const SignUp = () => {
           {/* profile input component */}
 
           <ProfilePhotoSelector
-            image={ProfilePic}
-            setProfilePic={setProfilePic}
+            image={formdata.profileImageUrl}
+            setProfilePic={setformdata}
+            formdata={formdata}
           />
 
           {/* name  feild*/}
@@ -58,29 +62,43 @@ const SignUp = () => {
             type={"name"}
             placeholader={"Enter the name"}
             label={"Enter the name"}
-            onChange={({ target }) => setname(target.value)}
+            value={formdata.name}
+            onChange={({ target }) =>
+              setformdata({
+                ...formdata,
+                name: target.value,
+              })
+            }
           />
           {/* email  feild*/}
           <Input
             type={"email"}
             placeholader={"Enter the email"}
             label={"Enter the email"}
-            onChange={({ target }) => setemail(target.value)}
+            value={formdata.email}
+            onChange={({ target }) =>
+              setformdata({ ...formdata, email: target.value })
+            }
           />
+          {console.log(formdata)}
 
           {/* password feild */}
           <Input
             type={"password"}
             label={"Enter the password"}
             placeholader={"Enter the password"}
-            onChange={({ target }) => setpassword(target.value)}
+            onChange={({ target }) =>
+              setformdata({ ...formdata, password: target.value })
+            }
           />
 
           <Input
             type={"text"}
             label={"Enter the Invite Token "}
             placeholader={"Enter the Token"}
-            onChange={({ target }) => setadminToken(target.value)}
+            onChange={({ target }) => {
+              setformdata({ ...formdata, adminInviteToken: target.value });
+            }}
           />
 
           {error && <div className="text-red-500 text-xs pb-2.5">{error}</div>}

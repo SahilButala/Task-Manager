@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { LuTrash, LuUpload, LuUser } from "react-icons/lu";
-const ProfilePhotoSelector = ({ image, setProfilePic }) => {
+const ProfilePhotoSelector = ({ image, setProfilePic , formdata }) => {
   const inputRef = useRef(null);
   const [previewUrl, setpreviewUrl] = useState("");
 
@@ -8,7 +8,10 @@ const ProfilePhotoSelector = ({ image, setProfilePic }) => {
     const file = e.target.files[0];
 
     if (file) {
-      setProfilePic(file);
+      setProfilePic({
+        ...formdata,
+        profileImageUrl : file
+      });
 
       // generating preview  url from file
 

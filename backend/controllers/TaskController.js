@@ -6,15 +6,18 @@ import { ApiRes } from "../utils/ApiRes.js";
 // create task
 
 const getDashboardData = catchAsync(async (req, res) => {
-  const totaltask = await Task.countDocuments();
-  const pendingTasks = await Task.countDocuments({ status: "Pending" });
-  const completedTask = await Task.countDocuments({ status: "Completed" });
-  const inProgressTask = await Task.countDocuments({ status: "In Progress" });
+  const totaltask = await Task.countDocuments(); // getting first all task
+  const pendingTasks = await Task.countDocuments({ status: "Pending" }); // pendig task
+  const completedTask = await Task.countDocuments({ status: "Completed" }); // completed 
+  const inProgressTask = await Task.countDocuments({ status: "In Progress" }); // progress
 
   const overdueTask = await Task.countDocuments({
     status: { $ne: "Completed" },
     dueDate: { $lt: new Date() }, // means if task is created yesterday then show overdue
   });
+
+  // here we find first all tasks of perticular users by aggregating and we create a new object that contain key as a status (pending , completed , in progress) and value will be the count 
+
 
   // ensure that all posibble status are included
   const taskStatus = ["Pending", "In Progress", "Completed"];
@@ -30,13 +33,15 @@ const getDashboardData = catchAsync(async (req, res) => {
 
   const taskDistribution = taskStatus.reduce((acc, status) => {
     const formattedkey = status.replace(/\s+/g, ""); // remove spaces from response key
-
+    
     acc[formattedkey] =
       taskDistribrutionRaw.find((item) => item?._id === status)?.count || 0;
 
     return acc;
   }, {});
   taskDistribution["All"] = totaltask;
+
+  // similar do for priority - - -- -- 
 
   // ensure that all possible priority is incuded
 

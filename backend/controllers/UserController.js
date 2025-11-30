@@ -11,7 +11,7 @@ const getUsers = catchAsync(async (req , res)=>{
 
       console.log(users)
 
-      // add task to each user
+      // here we getting task details of each user (count of) like status pending , completed , progress etc 
       const userWithTaskCounts = await Promise.all(users.map(async (user)=>{
            const pendingTask = await Task.countDocuments({assignedTo : user?._id , status : "Pending"})
 
