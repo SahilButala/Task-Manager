@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUserData } from "../store/Slice/User";
 import { adminSideBarMenuData, userSideBarMenuData } from "../config";
@@ -7,6 +7,7 @@ import { adminSideBarMenuData, userSideBarMenuData } from "../config";
 const SideMenu = ({ activeMenue }) => {
   const { user } = useSelector((state) => state.auth);
   const [sideMenuData, setsideMenuData] = useState([]);
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
   const handleClick = (route) => {
@@ -20,7 +21,7 @@ const SideMenu = ({ activeMenue }) => {
 
   const handleLogout = () => {
     localStorage.clear("");
-    clearUserData();
+    dispatch(clearUserData())
     navigate("/");
   };
 

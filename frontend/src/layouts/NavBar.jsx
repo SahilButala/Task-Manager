@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import SideMenu from "./SideMenu";
+import { LuLogOut } from "react-icons/lu";
 
 const NavBar = ({ activeMenue }) => {
   const [OpenSideBarMenu, setOpenSideBarMenu] = useState(false);
   return (
-    <div className="flex gap-5 bg-white border border-b  border-gray-200/50 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30"> 
+    <div className="flex gap-5 bg-white border border-b  border-gray-200/50 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30 justify-between"> 
       <button
         className="block lg:hidden text-black"
         onClick={() => {
@@ -22,6 +23,8 @@ const NavBar = ({ activeMenue }) => {
           <SideMenu activeMenue={activeMenue} />
         </div>
       )}
+
+
     </div>
   );
 };

@@ -41,7 +41,7 @@ const UserSlice = createSlice({
   reducers: {
         clearUserData : (state , action)=>{
               state.isAuthenticated = false,
-              state.user = []
+              state.user = null
         }
   },
   initialState,
