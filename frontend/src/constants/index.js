@@ -4,5 +4,11 @@ export const apiPaths = {
      AUTH : {
         LOGIN : "/auth/login",
         REGISTER : "/auth/register"
-     }
+     },
+     IMAGE : {
+         UPLOAD_IMAGE : "/auth/upload-image"
+     },
+     TASKS : {
+            GET_DASHBOARD_DATA : "/task/dashboard"
+     } 
 }

@@ -7,11 +7,13 @@ const ProfilePhotoSelector = ({ image, setProfilePic , formdata }) => {
   const hanndleimageChange = (e) => {
     const file = e.target.files[0];
 
+  
+
     if (file) {
-      setProfilePic({
-        ...formdata,
-        profileImageUrl : file
-      });
+    setProfilePic(prev => ({
+    ...prev,
+    profileImageUrl: file
+  }));
 
       // generating preview  url from file
 
@@ -38,7 +40,7 @@ const ProfilePhotoSelector = ({ image, setProfilePic , formdata }) => {
         className="hidden"
       />
 
-      {!image ? (
+      {!previewUrl? (
         <div className="w-20 h-20 flex items-center justify-center bg-blue-100/50 rounded-full relative cursor-pointer">
           <LuUser className="text-4xl text-blue" />
           <button type="button" className="w-8 h-8 flex items-center  justify-center bg-blue-300 text-white rounded-full absolute -bottom-1 -right-1 cursor-pointer" onClick={onChooseFile}>

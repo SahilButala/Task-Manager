@@ -6,7 +6,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiRes } from "../utils/ApiRes.js";
 
 const jwtSignin = (id, role) => {
-  console.log(id, "sasasasasasa", role, "++++++++++++++++++++++++++++++++");
   return jwt.sign({ _id: id, role }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
@@ -46,6 +45,7 @@ const RegisterUser = catchAsync(async (req, res) => {
     })
   );
 });
+
 // login controller
 const LoginUser = catchAsync(async (req, res ,next) => {
   const { email, password } = req.body;
@@ -107,3 +107,6 @@ const updateUserprofile = catchAsync(async (req, res) => {
   );
 });
 export { RegisterUser, LoginUser, getuserProfile, updateUserprofile };
+
+
+ 

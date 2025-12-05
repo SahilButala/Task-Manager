@@ -2,38 +2,56 @@ import React, { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import { validateEmail, validatePassword } from "../../helper/helper";
 import Input from "../../helper/input/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfilePhotoSelector from "../../components/auth/ProfilePhotoSelector";
 import { initialRegisterData } from "../../config";
+import { useDispatch } from "react-redux";
+import { getRegister } from "../../store/Slice/User";
+import { uploadImage } from "../../utils/UploadImage";
+
 
 const SignUp = () => {
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [name, setname] = useState("");
+
   const [error, seterror] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
+
 
   const [adminToken, setadminToken] = useState("");
 
   const [formdata, setformdata] = useState(initialRegisterData);
+  const  navigate = useNavigate()
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
+  const dispatch = useDispatch();
 
+
+const handleLoginSubmit = async (e) => {
+  e.preventDefault();
+  try {
     if (!validateEmail(formdata.email)) {
       seterror("Please enter a valid email");
       return;
     }
 
-    // if (!validatePassword(formdata.password)) {
-    //   seterror(
-    //     "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character"
-    //   );
-    //   return;
-    // }
+    let uploadedImageUrl = formdata.profileImageUrl;
 
-    console.log("login api heated ... . . . .", formdata);
-  };
+    if (formdata.profileImageUrl !== "") {
+      const response = await uploadImage(formdata.profileImageUrl);
+      uploadedImageUrl = response?.imageurl || "";
+    }
+
+    const dataToSubmit = {
+      ...formdata,
+      profileImageUrl: uploadedImageUrl
+    };
+
+    dispatch(getRegister({ formdata: dataToSubmit, navigate }));
+    console.log(dataToSubmit);
+
+  } catch (error) {
+    console.error(error);
+    seterror("Something went wrong. Please try again.");
+  }
+};
+
 
   return (
     <AuthLayout>
@@ -51,7 +69,7 @@ const SignUp = () => {
           {/* profile input component */}
 
           <ProfilePhotoSelector
-            image={formdata.profileImageUrl}
+            image={formdata?.profileImageUrl}
             setProfilePic={setformdata}
             formdata={formdata}
           />
@@ -62,12 +80,11 @@ const SignUp = () => {
             type={"name"}
             placeholader={"Enter the name"}
             label={"Enter the name"}
-            value={formdata.name}
             onChange={({ target }) =>
-              setformdata({
-                ...formdata,
+              setformdata((prev)=>({
+                ...prev,
                 name: target.value,
-              })
+              }))
             }
           />
           {/* email  feild*/}
@@ -75,9 +92,8 @@ const SignUp = () => {
             type={"email"}
             placeholader={"Enter the email"}
             label={"Enter the email"}
-            value={formdata.email}
             onChange={({ target }) =>
-              setformdata({ ...formdata, email: target.value })
+              setformdata((prev)=>({ ...prev, email: target.value }))
             }
           />
           {console.log(formdata)}
@@ -88,7 +104,7 @@ const SignUp = () => {
             label={"Enter the password"}
             placeholader={"Enter the password"}
             onChange={({ target }) =>
-              setformdata({ ...formdata, password: target.value })
+              setformdata((prev)=>({ ...prev, password: target.value }))
             }
           />
 
@@ -97,7 +113,7 @@ const SignUp = () => {
             label={"Enter the Invite Token "}
             placeholader={"Enter the Token"}
             onChange={({ target }) => {
-              setformdata({ ...formdata, adminInviteToken: target.value });
+              setformdata((prev)=>({ ...prev, adminInviteToken: target.value }));
             }}
           />
 

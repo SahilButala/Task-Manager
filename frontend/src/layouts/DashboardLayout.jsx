@@ -1,11 +1,26 @@
-import React from 'react'
+import React from "react";
+import { useSelector } from "react-redux";
+import NavBar from "./NavBar";
+import SideMenu from "./SideMenu";
 
-const DashboardLayout = ({children , activeMenue}) => {
+// this is the admin side dashboard
+const DashboardLayout = ({ children, activeMenue }) => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div>
-        {children}
-    </div>
-  )
-}
+      <NavBar activeMenue={activeMenue} />
 
-export default DashboardLayout
+      {user && (
+        <div className="flex">
+          <div className="max-[1080px]:hidden">
+            <SideMenu activeMenue={activeMenue} />
+          </div>
+
+          <div className="grow mx-5">{children}</div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DashboardLayout;

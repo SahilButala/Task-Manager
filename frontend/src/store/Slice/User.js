@@ -31,14 +31,19 @@ export const getLogin = createAsyncThunk(
 
 export const getRegister = createAsyncThunk("/auth/register" , async ({formdata , navigate})=>{
     const res = await RegisterService(formdata)
-    if(res?.data){
-          
+    if(res?.sucess === true){
+          navigate("/login")
     }
     return res
 })
 const UserSlice = createSlice({
   name: "auth",
-  reducers: {},
+  reducers: {
+        clearUserData : (state , action)=>{
+              state.isAuthenticated = false,
+              state.user = []
+        }
+  },
   initialState,
   extraReducers: (builder) => {
     builder
@@ -59,5 +64,8 @@ const UserSlice = createSlice({
       })
   },
 });
+
+
+export const {clearUserData} = UserSlice.actions
 
 export default UserSlice.reducer;

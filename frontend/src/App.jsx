@@ -10,29 +10,56 @@ import UserDashboard from "./pages/User/Dashboard";
 import MyTask from "./pages/User/MyTask";
 import ViewTaskDetails from "./pages/User/ViewTaskDetails";
 import SignUp from "./pages/auth/Signin";
+import { useSelector } from "react-redux";
+import PublicRoute from "./route/PublicRoute";
 
 const App = () => {
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   return (
     <div>
       <Router>
         <Routes>
           {/* auth routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+
+          <Route
+            element={
+              <PublicRoute
+                isAuthenticated={isAuthenticated}
+                allowRoles={user?.role}
+              />
+            }
+          >
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Route>
 
           {/* admin routes */}
-          <Route element={<PrivateRoute allowRoles={["admin"]} />}>
-            <Route path='/admin/dashboard' element={<Dashboard />} />
-            <Route path='/admin/tasks' element={<ManageTask />} />
-            <Route path='/admin/create' element={<CreateTask />} />
-            <Route path='/admin/users' element={<ManageUser />} />
+          <Route
+            element={
+              <PrivateRoute
+                allowRoles={user?.role}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          >
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/tasks" element={<ManageTask />} />
+            <Route path="/admin/create" element={<CreateTask />} />
+            <Route path="/admin/users" element={<ManageUser />} />
           </Route>
 
           {/* users route */}
-          <Route element={<PrivateRoute allowRoles={["member"]} />}>
-            <Route path='/user/dashboard' element={<UserDashboard />} />
-            <Route path='/user/task' element={<MyTask />} />
-            <Route path='/user/details/:id' element={<ViewTaskDetails />} />
+          <Route
+            element={
+              <PrivateRoute
+                allowRoles={user?.role}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          >
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+            <Route path="/user/task" element={<MyTask />} />
+            <Route path="/user/details/:id" element={<ViewTaskDetails />} />
           </Route>
         </Routes>
       </Router>
