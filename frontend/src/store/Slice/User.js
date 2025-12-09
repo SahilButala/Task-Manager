@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { LoginService, RegisterService } from "../../api";
+import { getAllUsersService, LoginService, RegisterService } from "../../api";
 
 const initialState = {
   isLoading: false,
-  user: [],
+  user: [] || null,
   isAuthenticated: false,
+  adminUsers : [] || null
 };
 
 export const getLogin = createAsyncThunk(
@@ -27,6 +28,12 @@ export const getLogin = createAsyncThunk(
     return res;
   }
 );
+
+// this api for only admin 
+export const adminSideUsers = createAsyncThunk("/admin/getusers" , async()=>{
+      const res = await getAllUsersService()
+      return res?.data
+})
 
 
 export const getRegister = createAsyncThunk("/auth/register" , async ({formdata , navigate})=>{
@@ -61,6 +68,12 @@ const UserSlice = createSlice({
         state.isAuthenticated = false;
         state.isLoading = true;
         state.user = [];
+      }).addCase(adminSideUsers.pending , (state , action)=>{
+          state.adminUsers = null
+      }).addCase(adminSideUsers?.fulfilled , (state , action)=>{
+          state.adminUsers = action?.payload
+      }).addCase(adminSideUsers.rejected , (state , action)=>{
+          state.adminUsers = null
       })
   },
 });

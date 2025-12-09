@@ -15,7 +15,7 @@ export const initialRegisterData = {
   adminInviteToken: "",
 };
 
-export const initialcreateTaskData = {
+export const  initialcreateTaskData = {
   title: "",
   description: "",
   priority: "Low",

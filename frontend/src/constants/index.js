@@ -10,5 +10,8 @@ export const apiPaths = {
      },
      TASKS : {
             GET_DASHBOARD_DATA : "/task/dashboard"
-     } 
+     } ,
+     USERS : {
+        GET_ALL_USERS : "/user"
+     }
 }
