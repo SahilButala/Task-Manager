@@ -1,9 +1,87 @@
-import React from 'react'
+import moment from "moment";
+import React from "react";
 
-const TaskTable = ({tableData}) => {
+const TaskTable = ({ tableData }) => {
+  // getting color by its status
+  const getStatusBadgeColor = (status) => {
+    switch (status) {
+      case "Completed":
+        return "bg-green-100 text-green-500 border border-green-200";
+
+      case "Pending":
+        return "bg-purple-100 text-purple-500 border border-purple-200";
+
+      case "In Progress":
+        return "bg-cyan-100 text-cyan-500 border border-cyan-200";
+
+      default:
+        return "bg-gray-100 text-gray-500 border border-gray-200";
+    }
+  };
+
+  // getting color by its priority
+  const getPriorityBadgeColor = (status) => {
+    switch (status) {
+      case "High":
+        return "bg-red-100 text-red-500 border border-red-200";
+      case "Medium":
+        return "bg-orange-100 text-orange-500 border border-orange-200";
+      case "Low":
+        return "bg-lime-100 text-lime-500 border border-lime-500";
+
+      default:
+        return "bg-gray-100 text-gray-500 border border-gray-200";
+    }
+  };
+
   return (
-    <div>TaskTable</div>
-  )
-}
+    <div className="overflow-x-auto p-0 rounded-lg mt-3">
+      <table className="min-w-full">
+        <thead>
+          <tr className="text-left">
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Name</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Status</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Priority</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell">Created On</th>
+          </tr>
+        </thead>
 
-export default TaskTable
+        <tbody>
+          {tableData && tableData.length > 0 ? (
+            tableData.map((item, i) => (
+              <tr key={i} className="border-t border-gray-200">
+                <td className="my-4 mx-4 text-gray-700 text-[13px]  line-clamp-1 overflow-hidden ">{item?.title}</td>
+                <td className="py-4 px-4">
+                  <span
+                    className={`px-2 py-1 text-xs rounded inline-block ${getStatusBadgeColor(
+                      item?.status
+                    )}`}
+                  >
+                    {item?.status}
+                  </span>
+                </td>
+                <td className="py-4 px-4">
+                  <span
+                    className={`px-2 py-1 text-xs rounded inline-block ${getPriorityBadgeColor(
+                      item?.priority
+                    )}`}
+                  >
+                    {item?.priority}
+                  </span>
+                </td>
+
+                <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">
+                  {item?.createdAt ? moment(item?.createdAt).format("Do MMM YYYY") : "N/A"}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <div className="">No Data</div>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default TaskTable;

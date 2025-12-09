@@ -8,14 +8,14 @@ const PrivateRoute = ({ allowRoles, isAuthenticated }) => {
   if (
     isAuthenticated &&
     allowRoles === "member" &&
-    ["/login", "/signup", "/admin/dashboard"].includes(location.pathname)
+    ["/login", "/signup", "/admin/dashboard" , "/"].includes(location.pathname)
   ) {
     return <Navigate to={"/user/dashboard"} />;
   }
   if (
     isAuthenticated &&
     allowRoles === "admin" &&
-    ["/login", "/signup", "/user/dashboard"].includes(location.pathname)
+    ["/login", "/signup", "/user/dashboard" , "/"].includes(location.pathname)
   ) {
     return <Navigate to={"/admin/dashboard"} />;
   }

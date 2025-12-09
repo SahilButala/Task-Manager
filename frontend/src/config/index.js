@@ -5,12 +5,24 @@ import {
   LuSquarePlus,
   LuUsers,
 } from "react-icons/lu";
+
+// all forms initialData
 export const initialRegisterData = {
   email: "",
   name: "",
   profileImageUrl: "",
   password: " ",
   adminInviteToken: "",
+};
+
+export const initialcreateTaskData = {
+  title: "",
+  description: "",
+  priority: "Low",
+  dueDate: null,
+  assignedTo: [],
+  todoChecklist: [],
+  attachements : []
 };
 
 export const adminSideBarMenuData = [
@@ -66,14 +78,13 @@ export const userSideBarMenuData = [
   },
 ];
 
-
 export const Priority_Data = [
-     {label : "low" , value : "Low"},
-     {label : "high" , value : "High"},
-     {label : "medium" , value : "Medium"},
-]
+  { label: "low", value: "Low" },
+  { label: "high", value: "High" },
+  { label: "medium", value: "Medium" },
+];
 export const Status_Data = [
-     {label : "Pending" , value : "Pending"},
-     {label : "In Progress" , value : "In Progress"},
-     {label : "Completed" , value : "Completed"},
-]
+  { label: "Pending", value: "Pending" },
+  { label: "In Progress", value: "In Progress" },
+  { label: "Completed", value: "Completed" },
+];

@@ -12,6 +12,7 @@ import ViewTaskDetails from "./pages/User/ViewTaskDetails";
 import SignUp from "./pages/auth/Signin";
 import { useSelector } from "react-redux";
 import PublicRoute from "./route/PublicRoute";
+import { NotFound_page } from "./Not_found";
 
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
@@ -60,6 +61,17 @@ const App = () => {
             <Route path="/user/dashboard" element={<UserDashboard />} />
             <Route path="/user/task" element={<MyTask />} />
             <Route path="/user/details/:id" element={<ViewTaskDetails />} />
+          </Route>
+
+          <Route
+            element={
+              <PrivateRoute
+                allowRoles={user?.role}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          >
+            <Route path="*" element={<NotFound_page />} />
           </Route>
         </Routes>
       </Router>

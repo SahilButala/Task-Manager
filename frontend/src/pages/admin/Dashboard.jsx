@@ -12,6 +12,8 @@ import { IoMdCard } from "react-icons/io";
 import Loader from "../../utils/Loader";
 import { LuArrowRight } from "react-icons/lu";
 import TaskTable from "../../components/Table/TaskTable";
+import CustomPieChart from "../../components/ChartCompo/CustomPieChart";
+import CustomBarChart from "../../components/ChartCompo/CustomBarChart";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -22,6 +24,8 @@ const Dashboard = () => {
   const [dahboardData, setdahboardData] = useState(null);
   const [barChartData, setbarChartData] = useState([]);
   const [pichartData, setpichartData] = useState([]);
+
+  const COLORS = ["#8d51FF", "#00B8db", "#7bce00  "];
 
   const [isLoading, setisLoading] = useState(false);
 
@@ -36,6 +40,7 @@ const Dashboard = () => {
 
       if (data?.sucess === true) {
         setdahboardData(data?.data);
+        prePairChartData(data?.data?.charts);
         setisLoading(false);
       }
     } catch (error) {
@@ -44,17 +49,58 @@ const Dashboard = () => {
     }
   };
 
+  // prepair ChartData
+  const prePairChartData = (data) => {
+    const taskDistribution = data?.taskDistribution || null;
+    const taskprioritylevels = data?.taskprioritylevels || null;
+    console.log(taskDistribution, "zhandu");
+
+    const taskDistributionData = [
+      {
+        status: "Pending",
+        count: taskDistribution?.Pending || 0,
+      },
+      {
+        status: "In Progress",
+        count: taskDistribution?.InProgress || 0,
+      },
+      {
+        status: "Completed",
+        count: taskDistribution?.Completed || 0,
+      },
+    ];
+
+    setpichartData(taskDistributionData);
+
+    const priorityLevelData = [
+      {
+        priority: "High",
+        count: taskprioritylevels?.High || 0,
+      },
+      {
+        priority: "Medium",
+        count: taskprioritylevels?.Medium || 0,
+      },
+      {
+        priority: "Low",
+        count: taskprioritylevels?.Low || 0,
+      },
+    ];
+
+    setbarChartData(priorityLevelData);
+  };
+
   const onSeeMore = () => {
-     navigate("/admin/tasks")
+    navigate("/admin/tasks");
   };
 
   useEffect(() => {
     getdashboardData();
   }, []);
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  // if (isLoading) {
+  //   return <Loader />;
+  // }
 
   return (
     <DashboardLayout activeMenue={"Dashboard"}>
@@ -69,7 +115,7 @@ const Dashboard = () => {
               {moment().format("dddd Do MMM YYYY")}
             </p>
             <p className="text-xl md:text-[13px] text-gray-400 mt-1.5">
-              {moment().format('h:mm a')}
+              {moment().format("h:mm a")}
             </p>
           </div>
         </div>
@@ -111,17 +157,39 @@ const Dashboard = () => {
       </div>
 
       <div className="grid  grid-cols-1 md:grid-cols-2  gap-6 my-4 md:my-6">
+        <div className="">
+          <div className="card">
+            <div className="flex items-center justify-between">
+              <h5>Task Distrubution</h5>
+            </div>
+
+            <CustomPieChart data={pichartData} color={COLORS} />
+          </div>
+        </div>
+        <div className="">
+          <div className="card">
+            <div className="flex items-center justify-between mb-4">
+              <h5>Priority Distrubution</h5>
+            </div>
+
+            <CustomBarChart data={barChartData} color={COLORS} />
+          </div>
+        </div>
+
         <div className="md:col-span-2">
           <div className="card ">
             <div className="flex justify-between items-center">
               <h5>Recent Tasks</h5>
 
-              <button className="card-btn flex items-center gap-2 cursor-pointer" onClick={onSeeMore}>
+              <button
+                className="card-btn flex items-center gap-2 cursor-pointer"
+                onClick={onSeeMore}
+              >
                 See All <LuArrowRight className="text-base" />
               </button>
             </div>
 
-            <TaskTable tableData={dahboardData?.recentTasks || []} />
+            <TaskTable tableData={dahboardData?.recentTask || []} />
           </div>
         </div>
       </div>
