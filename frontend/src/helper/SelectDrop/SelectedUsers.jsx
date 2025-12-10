@@ -8,7 +8,7 @@ import Modal from "./Modal";
 import AvatarGroup from "../Avatar/AvatarGroup";
 
 const SelectedUsers = ({ usersSelected, setSelectedUsers }) => {
-  const [isModalOpen, setisModalOpen] = useState(true);
+  const [isModalOpen, setisModalOpen] = useState(false);
   const [tempSelectedUsers, settempSelectedUsers] = useState([]);
 
   const dispatch = useDispatch();

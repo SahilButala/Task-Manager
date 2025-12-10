@@ -16,7 +16,7 @@ const NavBar = ({ activeMenue }) => {
         {OpenSideBarMenu ? <HiOutlineX  className="text-2xl"/> : <HiOutlineMenu className="text-2xl"/>}
       </button>
 
-      <h2>Expense Tracker</h2>
+      <h2 className="font-medium text-lg">Task Manager</h2>
 
       {OpenSideBarMenu && (
         <div className="fixed top-[62px] -ml-4 bg-white">

@@ -43,7 +43,7 @@ const TaskSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    attachments: [{ type: String }],
+    attachments: [{ type: String  }],
     todoChecklist: [todoSchema],
     progress: {
       type: Number,

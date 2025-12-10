@@ -248,12 +248,15 @@ const createTask = catchAsync(async (req, res) => {
     todoChecklist,
   } = req.body;
 
+
+
   if (!Array.isArray(assignedTo)) {
     return res
       .status(404)
       .json(new ApiRes(true, "assignedTo must be an array of id"));
   }
 
+  console.log(attachments , "attachements")
   const task = await Task.create({
     title,
     description,

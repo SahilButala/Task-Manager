@@ -9,7 +9,8 @@ export const apiPaths = {
          UPLOAD_IMAGE : "/auth/upload-image"
      },
      TASKS : {
-            GET_DASHBOARD_DATA : "/task/dashboard"
+            GET_DASHBOARD_DATA : "/task/dashboard",
+            CREATE_TASK : "/task"
      } ,
      USERS : {
         GET_ALL_USERS : "/user"
