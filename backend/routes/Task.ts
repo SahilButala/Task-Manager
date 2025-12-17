@@ -59,7 +59,7 @@ router.patch(
 );
 
 router.patch(
-  "/:id/todo",
+  "/todo/:id",
   protect,
   validate(taskIdParamDto),
   updateTaskChecklist

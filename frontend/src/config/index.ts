@@ -70,7 +70,7 @@ export const userSideBarMenuData = [
     id: "02",
     label: "My Task",
     icon: LuClipboardCheck,
-    path: "/user/tasks",
+    path: "/user/task",
   },
   {
     id: "05",

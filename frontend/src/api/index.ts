@@ -40,10 +40,19 @@ export const deleteTaskByIdService = async (id : string)=>{
        const {data} = await axiosInstance.delete(`${apiPaths.TASKS.GET_TASKS}/${id}`)
        return data
 }
+export const getTaskByIdService = async (id : string)=>{
+       const {data} = await axiosInstance.get(`${apiPaths.TASKS.GET_TASK_BY_ID}/${id}`)
+       return data
+}
 export const handleDownloadReportService = async ()=>{
        const data = await axiosInstance.get(`${apiPaths.DOWNLOAD_REPORT.DOWNLOAD_USER_REPORT}` , {
          responseType : "blob"
        })
+       return data
+}
+
+export const updateTodoCheckListService = async (id : string | undefined , todoChecklist : any)=>{
+       const {data} = await axiosInstance.patch(`${apiPaths.TASKS.UPDATE_TODOCHECKLIST}/${id}` , {todoChecklist})
        return data
 }
 

@@ -11,7 +11,10 @@ export const apiPaths = {
      TASKS : {
             GET_DASHBOARD_DATA : "/task/dashboard",
             CREATE_TASK : "/task",
-            GET_TASKS : "/task"
+            GET_TASKS : "/task",
+            GET_USER_DASHBOARD_DATA : "/task/user",
+            GET_TASK_BY_ID : "/task",
+            UPDATE_TODOCHECKLIST : "/task/todo"
      } ,
      USERS : {
         GET_ALL_USERS : "/user" 
