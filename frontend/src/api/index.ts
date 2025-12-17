@@ -40,3 +40,11 @@ export const deleteTaskByIdService = async (id : string)=>{
        const {data} = await axiosInstance.delete(`${apiPaths.TASKS.GET_TASKS}/${id}`)
        return data
 }
+export const handleDownloadReportService = async ()=>{
+       const data = await axiosInstance.get(`${apiPaths.DOWNLOAD_REPORT.DOWNLOAD_USER_REPORT}` , {
+         responseType : "blob"
+       })
+       return data
+}
+
+

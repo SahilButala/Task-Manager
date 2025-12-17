@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import {
   getAllUsersService,
   LoginService,
@@ -14,15 +18,18 @@ interface LoginPayload {
 }
 
 export interface User {
-  _id: string
-  name: string
-  email: string
-  profileImageUrl: string
-  role: string
-  createdAt: string
-  updatedAt: string
-  __v: number
-  token: string
+  _id: string;
+  name: string;
+  email: string;
+  profileImageUrl: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  token: string;
+  pendingTask: number;
+  inprogressTask: number;
+  CompleteTask: number;
 }
 
 interface RegisterPayload {
@@ -74,13 +81,10 @@ export const getLogin = createAsyncThunk(
 );
 
 // admin only
-export const adminSideUsers = createAsyncThunk(
-  "/admin/getusers",
-  async () => {
-    const res = await getAllUsersService();
-    return res?.data;
-  }
-);
+export const adminSideUsers = createAsyncThunk("/admin/getusers", async () => {
+  const res = await getAllUsersService();
+  return res?.data;
+});
 
 export const getRegister = createAsyncThunk(
   "/auth/register",

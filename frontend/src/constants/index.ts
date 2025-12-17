@@ -15,5 +15,8 @@ export const apiPaths = {
      } ,
      USERS : {
         GET_ALL_USERS : "/user" 
+     },
+     DOWNLOAD_REPORT : {
+         DOWNLOAD_USER_REPORT : "/report/export/user"
      }
 }
