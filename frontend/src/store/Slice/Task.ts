@@ -11,7 +11,7 @@ export interface NotificationTask {
 }
 
 interface TaskState {
-  task: [] | null;
+  task: TaskResponse | null;
   isLoading: boolean;
   notification: number;
   notificationData: NotificationTask[];

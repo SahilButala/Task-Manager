@@ -76,7 +76,7 @@ const TaskTable = ({ tableData } :any) => {
               </tr>
             ))
           ) : (
-            <div className="">No Data</div>
+            <div className="text-center text-xs"></div>
           )}
         </tbody>
       </table>

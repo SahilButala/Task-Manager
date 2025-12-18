@@ -104,16 +104,16 @@ const SignUp = () => {
             }
           />
 
-          {/* Invite Token */}
+          {/* Company Name */}
           <Input
             type="text"
-            placeholder="Enter the Token"
-            label="Enter the Invite Token"
-            value={formdata.adminInviteToken}
+            placeholder="Enter the Company Name"
+            label="Enter the Company Name"
+            value={formdata.tenantName}
             onChange={(e) =>
               setformdata((prev) => ({
                 ...prev,
-                adminInviteToken: e.target.value,
+                tenantName: e.target.value,
               }))
             }
           />

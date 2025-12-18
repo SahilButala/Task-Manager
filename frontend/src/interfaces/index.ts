@@ -31,7 +31,7 @@ export interface initialRegisterDataType{
   name: string,
   profileImageUrl: string,
   password: string,
-  adminInviteToken: string,
+  tenantName : string
 }
 
 

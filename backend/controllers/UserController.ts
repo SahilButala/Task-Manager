@@ -10,23 +10,27 @@ import { ApiError } from "../utils/ApiError";
 // ===============================
  const getUsers = catchAsync(
   async (req: Request, res: Response) => {
-    const users = await User.find({ role: "member" }).select("-password");
+    const tenantId = req?.tenantId
+    const users = await User.find({ role: "member"  , tenantId}).select("-password");
 
     const userWithTaskCounts = await Promise.all(
       users.map(async (user: IUser) => {
         const pendingTask = await Task.countDocuments({
           assignedTo: user._id,
           status: "Pending",
+          tenantId
         });
 
         const inprogressTask = await Task.countDocuments({
           assignedTo: user._id,
           status: "In Progress",
+          tenantId
         });
 
         const CompleteTask = await Task.countDocuments({
           assignedTo: user._id,
           status: "Completed",
+          tenantId
         });
 
         return {

@@ -3,9 +3,11 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { catchAsync } from "../utils/catchAsync";
 import { ApiError } from "../utils/ApiError";
 import User from "../models/User_Model";
+import { Types } from "mongoose";
 
 interface DecodedToken extends JwtPayload {
   _id: string;
+  tenantId : Types.ObjectId 
 }
 
 export const protect = catchAsync(
@@ -38,7 +40,7 @@ export const protect = catchAsync(
       throw new ApiError(401, "User no longer exists");
     }
 
-    console.log(token)
+     req.tenantId = user?.tenantId
 
     req.user = user;
     next();

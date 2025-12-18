@@ -12,20 +12,26 @@ import { getIO } from "../sockets/socket";
 // Dashboard (Admin)
 // ===============================
 const getDashboardData = catchAsync(async (req: Request, res: Response) => {
-  const totaltask = await Task.countDocuments();
-  const pendingTasks = await Task.countDocuments({ status: "Pending" });
-  const completedTask = await Task.countDocuments({ status: "Completed" });
-  const inProgressTask = await Task.countDocuments({ status: "In Progress" });
+
+
+const tenantId = req?.tenantId 
+  const totaltask = await Task.countDocuments({tenantId});
+  const pendingTasks = await Task.countDocuments({ status: "Pending"  , tenantId});
+  const completedTask = await Task.countDocuments({ status: "Completed" , tenantId });
+  const inProgressTask = await Task.countDocuments({ status: "In Progress" , tenantId });
 
   const overdueTask = await Task.countDocuments({
     status: { $ne: "Completed" },
     dueDate: { $lt: new Date() },
+    tenantId
   });
 
   const taskStatus = ["Pending", "In Progress", "Completed"];
 
   const taskDistribrutionRaw: { _id: string; count: number }[] =
-    await Task.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]);
+    await Task.aggregate([   {$match : {
+        tenantId : tenantId
+      }},{ $group: { _id: "$status", count: { $sum: 1 } } }]);
 
   const taskDistribution = taskStatus.reduce<Record<string, number>>(
     (acc, status) => {
@@ -43,6 +49,9 @@ const getDashboardData = catchAsync(async (req: Request, res: Response) => {
 
   const TaskpriorityLevelRaw: { _id: string; count: number }[] =
     await Task.aggregate([
+      {$match : {
+        tenantId : tenantId
+      }},
       { $group: { _id: "$priority", count: { $sum: 1 } } },
     ]);
 
@@ -55,7 +64,9 @@ const getDashboardData = catchAsync(async (req: Request, res: Response) => {
     {}
   );
 
-  const recentTask = await Task.find()
+  
+
+  const recentTask = await Task.find({tenantId : req?.tenantId})
     .sort({ createdAt: -1 })
     .limit(10)
     .select("title priority status dueDate createdAt");
@@ -82,21 +93,22 @@ const getDashboardData = catchAsync(async (req: Request, res: Response) => {
 // ===============================
 const getuserDashboardData = catchAsync(async (req: Request, res: Response) => {
   const id = req.user?._id;
-
-  const totaltask = await Task.countDocuments({ assignedTo: id });
-  const completedTask = await Task.countDocuments({ status: "Completed" });
+  const tenantId = req?.tenantId
+  const totaltask = await Task.countDocuments({ assignedTo: id , tenantId });
+  const completedTask = await Task.countDocuments({ status: "Completed"  , tenantId});
 
   const overdueTask = await Task.countDocuments({
     assignedTo: id,
     status: { $ne: "Completed" },
     dueDate: { $lt: new Date() },
+    tenantId
   });
 
   const taskStatuses = ["Pending", "Completed", "In Progress"];
 
   const taskDistribrutionRaw: { _id: string; count: number }[] =
     await Task.aggregate([
-      { $match: { assignedTo: id } },
+      { $match: { assignedTo: id  , tenantId : tenantId} },
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
 
@@ -114,7 +126,7 @@ const getuserDashboardData = catchAsync(async (req: Request, res: Response) => {
 
   const taskprioritesByRaw: { _id: string; count: number }[] =
     await Task.aggregate([
-      { $match: { assignedTo: id } },
+      { $match: { assignedTo: id , tenantId  : tenantId} },
       { $group: { _id: "$priority", count: { $sum: 1 } } },
     ]);
 
@@ -126,7 +138,7 @@ const getuserDashboardData = catchAsync(async (req: Request, res: Response) => {
     {}
   );
 
-  const recentTask = await Task.find({ assignedTo: id })
+  const recentTask = await Task.find({ assignedTo: id , tenantId })
     .sort({ createdAt: -1 })
     .limit(10)
     .select("title status priority dueDate createdAt");
@@ -152,9 +164,12 @@ const getuserDashboardData = catchAsync(async (req: Request, res: Response) => {
 // ===============================
 const getTaks = catchAsync(async (req: Request, res: Response) => {
   const { status } = req.query as { status?: string };
+  const tenantId = req?.tenantId
   
   const filter: Record<string, any> = {};
   if (status)  filter.status = status.trim();;
+
+  filter.tenantId = tenantId
   
   let tasks;
   
@@ -167,11 +182,11 @@ const getTaks = catchAsync(async (req: Request, res: Response) => {
       "assignedTo",
       "name email profileImageUrl"
     );
-    console.log(tasks , "task")
   } else {
     tasks = await Task.find({
       ...filter,
       assignedTo: req.user?._id,
+      tenantId
     }).populate("assignedTo", "name email profileImageUrl");
   }
 
@@ -185,7 +200,7 @@ const getTaks = catchAsync(async (req: Request, res: Response) => {
   );
 
   const allTasks = await Task.countDocuments(
-    req.user?.role === "admin" ? {} : { assignedTo: req.user?._id }
+    req.user?.role === "admin" ? {tenantId} : { assignedTo: req.user?._id  , tenantId}
   );
 
   const pendingTasks = await Task.countDocuments({
@@ -249,6 +264,8 @@ const createTask = catchAsync(async (req: Request, res: Response) => {
     todoChecklist,
   } = req.body;
 
+  const tenantId  = req?.tenantId
+
   if (!Array.isArray(assignedTo)) {
     return res
       .status(404)
@@ -265,6 +282,7 @@ const createTask = catchAsync(async (req: Request, res: Response) => {
     createdBy: req.user?._id,
     attachments,
     todoChecklist,
+tenantId
   });
 
   const io = getIO();

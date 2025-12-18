@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
 // =====================
 // User Interface
@@ -11,6 +11,7 @@ export interface IUser extends Document {
   role: "admin" | "member";
   createdAt: Date;
   updatedAt: Date;
+  tenantId: Types.ObjectId;
 }
 
 // =====================
@@ -41,6 +42,10 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: ["admin", "member"],
       default: "member",
+    },
+    tenantId: {
+      type: Schema.Types.ObjectId,
+      ref: "Tenant",
     },
   },
   {

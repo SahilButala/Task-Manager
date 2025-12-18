@@ -24,6 +24,7 @@ export interface ITask extends Document {
   progress: number;
   createdAt: Date;
   updatedAt: Date;
+  tenantId : Types.ObjectId
 }
 
 // =====================
@@ -87,6 +88,10 @@ const taskSchema = new Schema<ITask>(
     progress: {
       type: Number,
       default: 0,
+    },
+       tenantId: {
+      type: Schema.Types.ObjectId,
+      ref: "Tenant",
     },
   },
   {

@@ -78,7 +78,7 @@ const ManageTask = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           {task?.tasks && task?.tasks?.length > 0 ? (
-            task?.tasks?.map((tas) => (
+            task?.tasks?.map((tas : any) => (
               <TaskCard
                 key={tas?._id}
                 title={tas?.title}
