@@ -54,6 +54,8 @@ const UserDashboard = () => {
     }
   };
 
+  console.log(dahboardData , "dah")
+
   // prepair ChartData
   const prePairChartData = (data :any) => {
     const taskDistribution = data?.taskDistribution || null;
@@ -138,7 +140,7 @@ const UserDashboard = () => {
             icon={<IoMdCard />}
             label={"Total Tasks"}
             value={addThousandsSeprator(
-              dahboardData?.charts?.taskDistribution?.All || 0
+              dahboardData?.statistics?.totaltask || 0
             )}
             color={"bg-blue-400"}
           />
@@ -146,7 +148,7 @@ const UserDashboard = () => {
             icon={<IoMdCard />}
             label={"Pending Tasks"}
             value={addThousandsSeprator(
-              dahboardData?.charts?.taskDistribution?.pending || 0
+              dahboardData?.charts?.taskDistribution?.Pending || 0
             )}
             color={"bg-violet-400"}
           />

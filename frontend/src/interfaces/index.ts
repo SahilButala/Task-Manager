@@ -61,6 +61,9 @@ export interface TodoChecklist {
   text: string;
   completed: boolean;
 }
+interface createdBy{
+  name : string
+}
 
 export interface Task {
   _id: string;
@@ -70,7 +73,7 @@ export interface Task {
   status: "Pending" | "In Progress" | "Completed";
   dueDate: string; // ISO date string
   assignedTo: AssignedUser[];
-  createdBy: string;
+  createdBy: createdBy;
   attachments: any[]; // change type if you define attachment structure
   todoChecklist: TodoChecklist[];
   progress: number;

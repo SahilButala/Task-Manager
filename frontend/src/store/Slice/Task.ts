@@ -2,13 +2,16 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAllTasksService } from "../../api";
 import { Task, TaskResponse } from "../../interfaces";
 
+type NotificationType = "created" | "updated" | null;
+
 export interface NotificationTask {
   task: Task;
   createdAt: string;
+  type: NotificationType;
 }
 
 interface TaskState {
-  task: TaskResponse | null;
+  task: [] | null;
   isLoading: boolean;
   notification: number;
   notificationData: NotificationTask[];
@@ -39,20 +42,20 @@ const TaskSlice = createSlice({
     clearNotificationCount: (state) => {
       state.notification = 0;
     },
-    setNotificationData: (state, action: PayloadAction<Task>) => {
-      if (!Array.isArray(state.notificationData)) {
-        state.notificationData = [];
-      }
-
+    setNotificationData: (
+      state,
+      action: PayloadAction<{ task: Task; type: NotificationType }>
+    ) => {
       state.notificationData.push({
-        task: action.payload,
+        task: action.payload.task, // ✅ FIX
+        type: action.payload.type,
         createdAt: new Date().toISOString(),
       });
     },
 
     // this function for clear the notification data after 5 days
     clearOldNotifications: (state) => {
-      const FIVE_DAYS =  60 * 1000;
+      const FIVE_DAYS = 60 * 1000;
       const now = Date.now();
 
       state.notificationData = state.notificationData.filter(

@@ -423,7 +423,7 @@ const updateTask = catchAsync(async (req: Request, res: Response) => {
   const task = await Task.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true,
-  }).populate("assignedTo", "name email profileImageUrl");
+  }).populate("assignedTo", "name email profileImageUrl").populate("createdBy" , "name");
 
   if (!task) {
     return res.status(404).json(new ApiRes(false, "Task not found.."));

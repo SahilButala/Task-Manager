@@ -42,12 +42,15 @@ const App = () => {
 
       //  Task update event
       socket.on("task:updated", (data) => {
-        console.log(data?.task, "sa");
-        dispatch(setNotificationData(data?.task));
+        console.log(data, "sa");
+        dispatch(
+          setNotificationData({
+            task: data?.task,
+            type: data?.action === "TASK_UPDATED" ? "updated" : null,
+          })
+        );
         dispatch(incrementCount());
-
       });
-      
     }
 
     return () => {
@@ -58,7 +61,7 @@ const App = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(clearOldNotifications());
-    }, 60 * 1000); // every 1 min
+    }, 60 * 60 * 1000); // every 1 hr
 
     return () => clearInterval(interval);
   }, []);
