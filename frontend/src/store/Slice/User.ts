@@ -4,10 +4,12 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import {
+  createUserService,
   getAllUsersService,
   LoginService,
   RegisterService,
 } from "../../api/index.js";
+import { toast } from "react-toastify";
 
 // =====================
 // Types
@@ -64,6 +66,7 @@ export const getLogin = createAsyncThunk(
 
     if (res?.sucess === true) {
       const { token, role } = res?.data;
+      toast.success("Login Successfully..")
 
       localStorage.setItem("token", token);
 
@@ -92,12 +95,23 @@ export const getRegister = createAsyncThunk(
     const res = await RegisterService(formdata);
 
     if (res?.sucess === true) {
+      toast.success("Register Successfully")
       navigate("/login");
+      
     }
 
     return res;
   }
 );
+
+export const createUser = createAsyncThunk("/user/create" , async({formdata , navigate , setloading} : any)=>{
+            const res = await createUserService(formdata)
+            if(res?.sucess === true){
+                toast.success("User Created Successfully")
+                navigate("/admin/users")
+                setloading(false)
+            }
+})
 
 // =====================
 // Slice

@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   BarChart,
   Bar,
@@ -7,14 +6,14 @@ import {
   XAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { priorityLevelDataType } from "../../interfaces";
 
-const CustomBarChart = ({ data, color }: any) => {
-  console.log("hello", data);
+const CustomBarChart = ({ data = [] }: any) => {
+  const hasData =
+    Array.isArray(data) && data.some((item: any) => item.count > 0);
+
   const getColor = (entry: any) => {
     switch (entry?.priority) {
       case "Low":
@@ -23,56 +22,60 @@ const CustomBarChart = ({ data, color }: any) => {
         return "#fe9900";
       case "High":
         return "#ff1f57";
-
       default:
         return "#00bc7d";
     }
   };
 
-  function CustomToolTip({ active, payload }: any) {
-    if (payload && active && payload.length) {
+  const CustomToolTip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
       return (
         <div className="bg-white rounded-lg shadow-md p-2 border border-gray-300">
           <div className="text-xs font-semibold text-purple-800 mb-1">
-            {payload[0].name}
+            {payload[0].payload.priority}
           </div>
           <p className="text-sm text-gray-600">
-            Count :{" "}
-            <span className="text-sm text-gray-900 font-medium">
+            Count:{" "}
+            <span className="text-gray-900 font-medium">
               {payload[0].value}
             </span>
           </p>
         </div>
       );
     }
-
     return null;
+  };
+
+  if (!hasData) {
+    return (
+      <div className="h-[300px] flex items-center justify-center text-sm text-gray-500 bg-white mt-5">
+        No data available
+      </div>
+    );
   }
 
   return (
     <div className="bg-white mt-5">
-      <ResponsiveContainer width={"100%"} height={300}>
+      <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid stroke="none" />
 
           <XAxis
-            dataKey={"priority"}
+            dataKey="priority"
             tick={{ fontSize: 12, fill: "#555" }}
             stroke="none"
           />
 
           <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
 
-          <Tooltip content={CustomToolTip} cursor={{ fill: "transparent" }} />
+          <Tooltip content={<CustomToolTip />} cursor={{ fill: "transparent" }} />
 
           <Bar
-            dataKey={"count"}
-            name="priority"
-            fill="#ff8042"
+            dataKey="count"
             radius={[8, 8, 0, 0]}
             barSize={38}
           >
-            {data?.map((item: any, i: any) => (
+            {data.map((item: any, i: number) => (
               <Cell key={i} fill={getColor(item)} />
             ))}
           </Bar>

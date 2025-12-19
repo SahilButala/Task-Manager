@@ -1,74 +1,109 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
-import { getAllUsersService, handleDownloadReportService } from "../../api";
+import { getAllUsersService } from "../../api";
 import { User } from "../../store/Slice/User";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import UserCard from "../../components/Cards/UserCard";
 import axiosInstance from "../../utils/axiosInstance";
 import { apiPaths } from "../../constants";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ManageUser = () => {
-  const [allUsers, setallUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const navigate = useNavigate()
+
+  // 1️⃣ Fetch users
   const getAllUsers = async () => {
     try {
+      setIsLoading(true);
       const res = await getAllUsersService();
 
       if (res?.sucess) {
-        setallUsers(res?.data);
+        setAllUsers(res.data || []);
       }
-    } catch (error) {}
+    } catch (error: any) {
+      toast.error("Failed to fetch users");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     getAllUsers();
   }, []);
 
-
-  const handleDownloadReport = async ()=>{
+  // 2️⃣ Download report
+  const handleDownloadReport = async () => {
     try {
+      const res = await axiosInstance.get(
+        apiPaths.DOWNLOAD_REPORT.DOWNLOAD_USER_REPORT,
+        {
+          responseType: "blob",
+        }
+      );
 
+      const url = window.URL.createObjectURL(
+        new Blob([res.data])
+      );
 
-       const res =await axiosInstance.get(apiPaths.DOWNLOAD_REPORT.DOWNLOAD_USER_REPORT , {
-        responseType : "blob"
-       })
-
-       // creating URL for the blob
-       const url  = window.URL.createObjectURL(new Blob([res?.data]))
-       const link = document.createElement("a")
-       link.href = url
-       link.setAttribute("download" , "user_details.xlsx")
-       document.body.appendChild(link)
-       window.URL.revokeObjectURL(url)
- 
-    } catch (error : any) {
-      console.log(error)
-      toast.error(error)
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "user_details.xlsx");
+      document.body.appendChild(link);
+      link.click(); // ✅ important
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error: any) {
+      toast.error("Failed to download report");
     }
-  }
+  };
 
-  console.log(allUsers, "allusers");
-  return <DashboardLayout activeMenue="Team Members">
-  <div className="mt-5 mb-10">
-  <div className="flex md:flex-row md:items-center justify-between">
-    <h2 className="text-xl md:text-xl  font-medium">Team Members</h2>
+  const hasUsers = allUsers.length > 0;
 
-    <button className="flex  md:flex  items-center download-btn" onClick={()=>handleDownloadReport()}>
-      <LuFileSpreadsheet/>
-      Download Report</button>
-  </div>
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 ">
+  return (
+    <DashboardLayout activeMenue="Team Members">
+      <div className="mt-5 mb-10">
+        {/* Header */}
+        <div className="flex md:flex-row md:items-center justify-between">
+          <h2 className="text-xl font-medium">Team Members</h2>
 
-    {
-      allUsers?.map((user)=>(
-        <UserCard key={user?._id}  userInfo={user} />
-      ))
-    }
+          {hasUsers && (
+            <button
+              className="flex items-center download-btn"
+              onClick={handleDownloadReport}
+            >
+              <LuFileSpreadsheet />
+              Download Report
+            </button>
+          )}
+        </div>
 
-  </div>
-  </div>
-  </DashboardLayout>;
+        {/* Content */}
+        {isLoading ? (
+          <div className="h-[300px] flex items-center justify-center text-sm text-gray-500">
+            Loading users...
+          </div>
+        ) : hasUsers ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+            {allUsers.map((user) => (
+              <UserCard key={user._id} userInfo={user} />
+            ))}
+          </div>
+        ) : (
+          // 3️⃣ Empty state
+          <div className="h-[300px] flex flex-col items-center justify-center text-sm ">
+            <p className="text-gray-500">No team members found</p>
+            <p className="text-xs mt-1">
+              <span className="hover:underline text-blue-400 cursor-pointer" onClick={()=>navigate("/admin/create-user")}> Create users</span> to start collaborating
+            </p>
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
 };
 
 export default ManageUser;

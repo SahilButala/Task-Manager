@@ -6,6 +6,7 @@ import { adminSideBarMenuData, userSideBarMenuData } from "../config";
 import { AppDispatch, RootState } from "../store";
 
 import { IconType } from "react-icons";
+import { clearTaskData } from "../store/Slice/Task";
 
 export interface SideMenuItem {
   id: string;
@@ -32,6 +33,7 @@ const SideMenu = ({ activeMenue } : any) => {
 const handleLogout = () => {
   localStorage.clear(); 
   dispatch(clearUserData());
+  dispatch(clearTaskData())
   navigate("/");
 };
 

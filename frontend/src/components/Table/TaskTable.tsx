@@ -47,7 +47,7 @@ const TaskTable = ({ tableData } :any) => {
         </thead>
 
         <tbody>
-          {tableData && tableData.length > 0 ? (
+          {tableData && tableData.length > 0 && (
             tableData.map((item :any, i :any) => (
               <tr key={i} className="border-t border-gray-200">
                 <td className="my-4 mx-4 text-gray-700 text-[13px]  line-clamp-1 overflow-hidden ">{item?.title}</td>
@@ -75,11 +75,22 @@ const TaskTable = ({ tableData } :any) => {
                 </td>
               </tr>
             ))
-          ) : (
-            <div className="text-center text-xs"></div>
-          )}
+          ) 
+          
+          }
         </tbody>
+
+      
       </table>
+
+  {
+  tableData.length === 0 && (
+     <div className="h-[300px] flex items-center justify-center text-sm text-gray-500 bg-white mt-5">
+        No data available
+      </div>
+  )
+}
+
     </div>
   );
 };

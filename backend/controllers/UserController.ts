@@ -1,9 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../utils/catchAsync";
 import User, { IUser } from "../models/User_Model";
 import Task from "../models/Task_model";
 import { ApiRes } from "../utils/ApiRes";
 import { ApiError } from "../utils/ApiError";
+import Tenant from "../models/Tenant";
+import { Types } from "mongoose";
+import bcryptjs from "bcryptjs";
 
 // ===============================
 // Get All Users (Admin)
@@ -67,8 +70,55 @@ import { ApiError } from "../utils/ApiError";
   }
 );
 
+const createUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { name, email, password, profileImageUrl } = req.body;
+
+    // 1️⃣ Find tenant properly
+    const tenant = await Tenant.findById(req.tenantId);
+
+    if (!tenant) {
+      return next(new ApiError(404, "Unauthorized or invalid tenant"));
+    }
+
+    // 2️⃣ Check existing user under same tenant
+    const existingUser = await User.findOne({
+      email,
+      tenantId: tenant._id,
+    });
+
+    if (existingUser) {
+      return next(
+        new ApiError(400, "User already exists under this tenant")
+      );
+    }
+
+    // 3️⃣ Hash password
+    const hashedPassword = await bcryptjs.hash(password, 12);
+
+    // 4️⃣ Create user
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      profileImageUrl,
+      tenantId: tenant._id,
+    });
+
+    // 5️⃣ Response
+    res.status(201).json({
+      sucess: true,
+      message: "User created successfully",
+      user,
+    });
+  }
+);
+
+
+
 export {
   getUserByid,
-  getUsers
+  getUsers,
+  createUser
 }
  

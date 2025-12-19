@@ -22,6 +22,7 @@ import {
   setNotificationData,
 } from "./store/Slice/Task";
 import { useDispatch } from "react-redux";
+import CreateUser from "./pages/admin/CreateUser";
 
 const App = () => {
   const { user, isAuthenticated } = useSelector(
@@ -96,6 +97,7 @@ const App = () => {
             <Route path="/admin/tasks" element={<ManageTask />} />
             <Route path="/admin/create" element={<CreateTask />} />
             <Route path="/admin/users" element={<ManageUser />} />
+            <Route path="/admin/create-user" element={<CreateUser />} />
           </Route>
 
           {/* users route */}

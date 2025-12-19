@@ -17,7 +17,8 @@ export const apiPaths = {
             UPDATE_TODOCHECKLIST : "/task/todo"
      } ,
      USERS : {
-        GET_ALL_USERS : "/user" 
+        GET_ALL_USERS : "/user" ,
+        CREATE_USER : "/user/create"
      },
      DOWNLOAD_REPORT : {
          DOWNLOAD_USER_REPORT : "/report/export/user"

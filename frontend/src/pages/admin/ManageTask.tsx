@@ -10,58 +10,60 @@ import { AppDispatch, RootState } from "../../store";
 import { statusArrayType } from "../../interfaces";
 
 const ManageTask = () => {
-  const handleDownloadReport = () => {};
-  const [allTabs, setallTabs] = useState<statusArrayType[]>([]);
-  const [filterData, setfilterData] = useState<string>("All");
-
-  const { task } = useSelector((state : RootState) => state.task);
-
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const dispatch = useDispatch<AppDispatch>();
+  const { task, isLoading } = useSelector(
+    (state: RootState) => state.task
+  );
 
-  const getTakshandler = () => {
-    try {
-      dispatch(getAllTasks({ filterData }));
-      const statusSummary = task?.statusSummary;
+  const [allTabs, setAllTabs] = useState<statusArrayType[]>([]);
+  const [filterData, setFilterData] = useState<string>("All");
 
-      const statusArray : statusArrayType[] = [
-        { label: "All", count: statusSummary?.all || 0 },
-        { label: "Pending", count: statusSummary?.pendingTasks || 0 },
-        { label: "Completed", count: statusSummary?.CompletedTasks || 0 },
-        {
-          label: "In Progress",
-          count: statusSummary?.inProgressTasks || 0,
-        },
-      ];
+  // 1️⃣ Fetch tasks when filter changes
+  useEffect(() => {
+    dispatch(getAllTasks({ filterData }));
+  }, [filterData, dispatch]);
 
-      setallTabs(statusArray);
-    } catch (error) {}
-  };
+  // 2️⃣ Update tabs when task data changes
+  useEffect(() => {
+    if (!task?.statusSummary) return;
 
-  console.log(filterData , "aaa")
-  const handleClick = (taskData :any) => {
+    const statusSummary = task.statusSummary;
+
+    const statusArray: statusArrayType[] = [
+      { label: "All", count: statusSummary.all || 0 },
+      { label: "Pending", count: statusSummary.pendingTasks || 0 },
+      { label: "Completed", count: statusSummary.CompletedTasks || 0 },
+      {
+        label: "In Progress",
+        count: statusSummary.inProgressTasks || 0,
+      },
+    ];
+
+    setAllTabs(statusArray);
+  }, [task]);
+
+  const handleClick = (taskData: any) => {
     navigate("/admin/create", { state: { taskId: taskData?._id } });
   };
 
+  const handleDownloadReport = () => {};
 
+  const hasTasks = task?.tasks && task.tasks.length > 0;
 
-  useEffect(() => {
-    getTakshandler();
-  }, [filterData]);
   return (
     <DashboardLayout activeMenue={"Manage Task"}>
       <div className="mt-5">
+        {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl  md:text-xl  font-medium">My Tasks</h2>
-          </div>
+          <h2 className="text-xl font-medium">My Tasks</h2>
 
           {allTabs?.[0]?.count > 0 && (
             <div className="flex items-center gap-3">
               <TaskStatusTabs
                 tabs={allTabs}
-                setActiveTab={setfilterData}
+                setActiveTab={setFilterData}
                 activetab={filterData}
               />
 
@@ -76,29 +78,42 @@ const ManageTask = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          {task?.tasks && task?.tasks?.length > 0 ? (
-            task?.tasks?.map((tas : any) => (
+        {/* Content */}
+        {isLoading ? (
+          <div className="h-[300px] flex items-center justify-center text-sm text-gray-500">
+            Loading tasks...
+          </div>
+        ) : hasTasks ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {task.tasks.map((tas: any) => (
               <TaskCard
-                key={tas?._id}
-                title={tas?.title}
-                description={tas?.description}
-                priority={tas?.priority}
-                status={tas?.status}
-                progress={tas?.progress}
-                createdAt={tas?.createdAt}
-                dueDate={tas?.dueDate}
-                assignedTo={tas?.assignedTo?.map((ass :any) => ass?.profileImageUrl)}
-                attachmentCount={tas?.attachments?.length || 0}
-                completedTodoCount={tas?.completedTodoCount || 0}
-                todoCheckList={tas?.todoChecklist || []}
+                key={tas._id}
+                title={tas.title}
+                description={tas.description}
+                priority={tas.priority}
+                status={tas.status}
+                progress={tas.progress}
+                createdAt={tas.createdAt}
+                dueDate={tas.dueDate}
+                assignedTo={tas.assignedTo?.map(
+                  (ass: any) => ass.profileImageUrl
+                )}
+                attachmentCount={tas.attachments?.length || 0}
+                completedTodoCount={tas.completedTodoCount || 0}
+                todoCheckList={tas.todoChecklist || []}
                 onClick={() => handleClick(tas)}
               />
-            ))
-          ) : (
-            <></>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          // 3️⃣ Empty state
+          <div className="h-[300px] flex flex-col items-center justify-center text-sm text-gray-500">
+            <p>No tasks found</p>
+            <p className="text-xs mt-1">
+              Try changing create a new task
+            </p>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

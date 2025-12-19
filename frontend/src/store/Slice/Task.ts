@@ -53,6 +53,12 @@ const TaskSlice = createSlice({
       });
     },
 
+    clearTaskData : (state)=>{
+      state.task = null
+      state.notification = 0
+      state.notificationData = []
+    },
+
     // this function for clear the notification data after 5 days
     clearOldNotifications: (state) => {
       const FIVE_DAYS = 60 * 1000;
@@ -84,6 +90,7 @@ export const {
   clearNotificationCount,
   setNotificationData,
   clearOldNotifications,
+  clearTaskData
 } = TaskSlice.actions;
 
 export default TaskSlice.reducer;

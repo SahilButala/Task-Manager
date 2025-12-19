@@ -54,6 +54,12 @@ export const adminSideBarMenuData = [
   },
   {
     id: "05",
+    label: "Create Users",
+    icon: LuUsers,
+    path: "/admin/create-user",
+  },
+  {
+    id: "06",
     label: "Logout",
     icon: LuLogOut,
     path: "logout",

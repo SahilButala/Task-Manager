@@ -39,6 +39,7 @@ const MyTask = () => {
     } catch (error) {}
   };
 
+    const hasTasks = task?.tasks && task.tasks.length > 0;
   console.log(filterData, "aaa");
   const handleClick = (id: any) => {
     navigate(`/user/details/${id}`);
@@ -87,6 +88,38 @@ const MyTask = () => {
             <></>
           )}
         </div>
+
+          { hasTasks ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            {task.tasks.map((tas: any) => (
+              <TaskCard
+                key={tas._id}
+                title={tas.title}
+                description={tas.description}
+                priority={tas.priority}
+                status={tas.status}
+                progress={tas.progress}
+                createdAt={tas.createdAt}
+                dueDate={tas.dueDate}
+                assignedTo={tas.assignedTo?.map(
+                  (ass: any) => ass.profileImageUrl
+                )}
+                attachmentCount={tas.attachments?.length || 0}
+                completedTodoCount={tas.completedTodoCount || 0}
+                todoCheckList={tas.todoChecklist || []}
+                onClick={() => handleClick(tas)}
+              />
+            ))}
+          </div>
+        ) : (
+          // 3️⃣ Empty state
+          <div className="h-[300px] flex flex-col items-center justify-center text-sm text-gray-500">
+            <p>No tasks found</p>
+            <p className="text-xs mt-1">
+              Try changing create a new task
+            </p>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

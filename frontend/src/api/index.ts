@@ -56,4 +56,9 @@ export const updateTodoCheckListService = async (id : string | undefined , todoC
        return data
 }
 
+export const createUserService = async(formdata : any)=>{
+        const {data} = await axiosInstance.post(apiPaths.USERS.CREATE_USER , {...formdata})
+        return data
+}
+
 
