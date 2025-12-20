@@ -15,13 +15,13 @@ export interface SideMenuItem {
   path: string;
 }
 
-const SideMenu = ({ activeMenue } : any) => {
-  const { user } = useSelector((state : RootState) => state.auth);
+const SideMenu = ({ activeMenue }: any) => {
+  const { user } = useSelector((state: RootState) => state.auth);
   const [sideMenuData, setsideMenuData] = useState<SideMenuItem[]>([]);
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
-  const handleClick = (route : string) => {
+  const handleClick = (route: string) => {
     if (route === "logout") {
       handleLogout();
       return;
@@ -30,12 +30,12 @@ const SideMenu = ({ activeMenue } : any) => {
     navigate(route);
   };
 
-const handleLogout = () => {
-  localStorage.clear(); 
-  dispatch(clearUserData());
-  dispatch(clearTaskData())
-  navigate("/");
-};
+  const handleLogout = () => {
+    localStorage.clear();
+    dispatch(clearUserData());
+    dispatch(clearTaskData());
+    navigate("/");
+  };
 
   useEffect(() => {
     if (user) {
@@ -47,24 +47,43 @@ const handleLogout = () => {
     return () => {};
   }, [user]);
 
+  const handleEditClick = (id: any) => {
+    navigate("/edit/profile", { state: { userid: id } });
+  };
+
+  console.log(user , "user")
   return (
     <div className="w-64 h-[calc(100vh-62px)] bg-white border-r border-gray-200/50 sticky top-[61px] z-20">
       <div className="flex flex-col items-center justify-center mb-7 pt-5">
         <div className="relative">
-          <img src={user?.profileImageUrl} alt="Profile Image"
-           className="w-20 h-20 rounded-full bg-slate-400 object-cover"
+          <img
+            src={user?.profileImageUrl}
+            alt="Profile Image"
+            className="w-20 h-20 rounded-full bg-slate-400 object-cover"
           />
         </div>
 
-        {user?.role === "admin" && <div className="text-[10px]  font-medium text-white bg-blue-400 px-3 py-0.5  rounded mt-4">Admin</div>}
+        {user?.role === "admin" && (
+          <div className="text-[10px]  font-medium text-white bg-blue-400 px-3 py-0.5  rounded mt-4">
+            Admin
+          </div>
+        )}
 
-        <h5 className="text-gray-950 font-medium leading-6 mt-3 capitalize">{user?.name || ""}</h5>
+        <h5 className="text-gray-950 font-medium leading-6 mt-3 capitalize">
+          {user?.name || ""}
+        </h5>
 
         <p className="text-[12px] text-gray-500">{user?.email || ""}</p>
+        <button
+          className="card-btn mt-2"
+          onClick={() => handleEditClick(user?._id)}
+        >
+          Edit profile
+        </button>
       </div>
 
       {sideMenuData && sideMenuData.length > 0 ? (
-        sideMenuData?.map((item : any) => (
+        sideMenuData?.map((item: any) => (
           <button
             key={item?.id}
             className={`w-full  flex items-center gap-4 text-[15px]   ${

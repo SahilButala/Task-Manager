@@ -20,12 +20,22 @@ const ManageTask = () => {
   const [allTabs, setAllTabs] = useState<statusArrayType[]>([]);
   const [filterData, setFilterData] = useState<string>("All");
 
-  // 1️⃣ Fetch tasks when filter changes
-  useEffect(() => {
-    dispatch(getAllTasks({ filterData }));
-  }, [filterData, dispatch]);
+  // ✅ NEW: dueDate filters
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
-  // 2️⃣ Update tabs when task data changes
+  // 1️⃣ Fetch tasks when filters change
+  useEffect(() => {
+    dispatch(
+      getAllTasks({
+        filterData,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+      })
+    );
+  }, [filterData, startDate, endDate, dispatch]);
+
+  // 2️⃣ Build tabs from API response
   useEffect(() => {
     if (!task?.statusSummary) return;
 
@@ -60,20 +70,37 @@ const ManageTask = () => {
           <h2 className="text-xl font-medium">My Tasks</h2>
 
           {allTabs?.[0]?.count > 0 && (
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3">
               <TaskStatusTabs
                 tabs={allTabs}
                 setActiveTab={setFilterData}
                 activetab={filterData}
               />
 
-              <button
+              {/* ✅ Due date filters */}
+              <div className="flex gap-2">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="border rounded px-2 py-1 text-sm outline-none"
+                />
+
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="border rounded px-2 py-1 text-sm"
+                />
+              </div>
+
+              {/* <button
                 className="hidden lg:flex download-btn"
                 onClick={handleDownloadReport}
               >
                 <LuFileSpreadsheet className="text-lg" />
                 Download Report
-              </button>
+              </button> */}
             </div>
           )}
         </div>
@@ -106,11 +133,10 @@ const ManageTask = () => {
             ))}
           </div>
         ) : (
-          // 3️⃣ Empty state
           <div className="h-[300px] flex flex-col items-center justify-center text-sm text-gray-500">
             <p>No tasks found</p>
             <p className="text-xs mt-1">
-              Try changing create a new task
+              Try changing filters or create a new task
             </p>
           </div>
         )}

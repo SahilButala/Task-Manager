@@ -26,8 +26,20 @@ const initialState: TaskState = {
 
 export const getAllTasks = createAsyncThunk(
   "/get/taks",
-  async ({ filterData }: any) => {
-    const { data } = await getAllTasksService(filterData);
+  async ({
+    filterData,
+    startDate,
+    endDate,
+  }: {
+    filterData: string;
+    startDate?: string;
+    endDate?: string;
+  }) => {
+    const { data } = await getAllTasksService({
+      filterData,
+      startDate,
+      endDate,
+    });
     return data;
   }
 );
@@ -53,10 +65,10 @@ const TaskSlice = createSlice({
       });
     },
 
-    clearTaskData : (state)=>{
-      state.task = null
-      state.notification = 0
-      state.notificationData = []
+    clearTaskData: (state) => {
+      state.task = null;
+      state.notification = 0;
+      state.notificationData = [];
     },
 
     // this function for clear the notification data after 5 days
@@ -90,7 +102,7 @@ export const {
   clearNotificationCount,
   setNotificationData,
   clearOldNotifications,
-  clearTaskData
+  clearTaskData,
 } = TaskSlice.actions;
 
 export default TaskSlice.reducer;

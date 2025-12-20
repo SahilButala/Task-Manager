@@ -62,7 +62,7 @@ const CreateUser = () => {
 
   return (
     <DashboardLayout activeMenue="Create Users">
-      <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center">
+      <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col  mt-7  ">
         <div>
           <h2 className="text-xl font-semibold">Create User For your Todos</h2>
           <p className="text-xs text-slate-700 mt-[5px] mb-6">

@@ -94,6 +94,13 @@ const NavBar = ({ activeMenue }: NavBarProps): JSX.Element => {
           </button>
 
           <h2 className="font-medium text-lg">Task Manager</h2>
+
+  
+        </div>
+
+        
+        <div className="text-xs text-gray-500">
+           CreatedBy <span>@Sahil Butala</span> <span className="underline">copyright 2025</span>
         </div>
 
         {/* Right */}
@@ -110,7 +117,11 @@ const NavBar = ({ activeMenue }: NavBarProps): JSX.Element => {
               </span>
             )}
           </button>
+
+ 
         </div>
+
+
 
         {/* Mobile Sidebar */}
         {openSideBarMenu && (

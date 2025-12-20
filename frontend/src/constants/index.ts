@@ -3,7 +3,8 @@ export const BASE_URL  = "http://localhost:3000/api/v1"
 export const apiPaths = {
      AUTH : {
         LOGIN : "/auth/login",
-        REGISTER : "/auth/register"
+        REGISTER : "/auth/register",
+        UPDATE_USER : "/auth"
      },
      IMAGE : {
          UPLOAD_IMAGE : "/auth/upload-image"

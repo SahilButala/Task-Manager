@@ -70,7 +70,7 @@ const ManageUser = () => {
         <div className="flex md:flex-row md:items-center justify-between">
           <h2 className="text-xl font-medium">Team Members</h2>
 
-          {hasUsers && (
+          {/* {hasUsers && (
             <button
               className="flex items-center download-btn"
               onClick={handleDownloadReport}
@@ -78,7 +78,7 @@ const ManageUser = () => {
               <LuFileSpreadsheet />
               Download Report
             </button>
-          )}
+          )} */}
         </div>
 
         {/* Content */}

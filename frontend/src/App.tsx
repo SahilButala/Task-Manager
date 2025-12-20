@@ -23,6 +23,7 @@ import {
 } from "./store/Slice/Task";
 import { useDispatch } from "react-redux";
 import CreateUser from "./pages/admin/CreateUser";
+import EditProfile from "./pages/admin/EditProfile";
 
 const App = () => {
   const { user, isAuthenticated } = useSelector(
@@ -123,6 +124,16 @@ const App = () => {
             }
           >
             <Route path="*" element={<NotFound_page />} />
+          </Route>
+          <Route
+            element={
+              <PrivateRoute
+                allowRoles={user?.role}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          >
+            <Route path="/edit/profile" element={<EditProfile />} />
           </Route>
         </Routes>
       </Router>

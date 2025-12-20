@@ -66,7 +66,7 @@ export const getLogin = createAsyncThunk(
 
     if (res?.sucess === true) {
       const { token, role } = res?.data;
-      toast.success("Login Successfully..")
+      toast.success("Login Successfully..");
 
       localStorage.setItem("token", token);
 
@@ -95,23 +95,25 @@ export const getRegister = createAsyncThunk(
     const res = await RegisterService(formdata);
 
     if (res?.sucess === true) {
-      toast.success("Register Successfully")
+      toast.success("Register Successfully");
       navigate("/login");
-      
     }
 
     return res;
   }
 );
 
-export const createUser = createAsyncThunk("/user/create" , async({formdata , navigate , setloading} : any)=>{
-            const res = await createUserService(formdata)
-            if(res?.sucess === true){
-                toast.success("User Created Successfully")
-                navigate("/admin/users")
-                setloading(false)
-            }
-})
+export const createUser = createAsyncThunk(
+  "/user/create",
+  async ({ formdata, navigate, setloading }: any) => {
+    const res = await createUserService(formdata);
+    if (res?.sucess === true) {
+      toast.success("User Created Successfully");
+      navigate("/admin/users");
+      setloading(false);
+    }
+  }
+);
 
 // =====================
 // Slice
@@ -124,6 +126,9 @@ const UserSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
+    setEditUserdata : (state , action)=>{
+        state.user = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -160,6 +165,6 @@ const UserSlice = createSlice({
 // =====================
 // Exports
 // =====================
-export const { clearUserData } = UserSlice.actions;
+export const { clearUserData  , setEditUserdata} = UserSlice.actions;
 
 export default UserSlice.reducer;
