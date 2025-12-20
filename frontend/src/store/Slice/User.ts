@@ -99,8 +99,9 @@ export const adminSideUsers = createAsyncThunk("/admin/getusers", async () => {
 
 export const getRegister = createAsyncThunk(
   "/auth/register",
-  async ({ formdata, navigate }: any) => {
-    const res = await RegisterService(formdata);
+  async ({ formdata, navigate , seterror }: any) => {
+     try {
+        const res = await RegisterService(formdata);
 
     if (res?.sucess === true) {
       toast.success("Register Successfully");
@@ -108,6 +109,13 @@ export const getRegister = createAsyncThunk(
     }
 
     return res;
+     } catch (error : any) {
+        if (error.response && error.response.data.message) {
+        seterror(error.response.data.message);
+      } else {
+        seterror("Something went wrong...");
+      }
+     }
   }
 );
 

@@ -41,7 +41,7 @@ const SignUp = () => {
         profileImageUrl: uploadedImageUrl,
       };
 
-      dispatch(getRegister({ formdata: dataToSubmit, navigate }));
+      dispatch(getRegister({ formdata: dataToSubmit, navigate , seterror }));
       console.log(dataToSubmit);
     } catch (error) {
       console.error(error);
