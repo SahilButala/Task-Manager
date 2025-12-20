@@ -4,9 +4,10 @@ A **real-time collaborative task management system** built using the **MERN stac
 
 This project was developed as part of a technical assignment with a focus on **clean architecture**, **TypeScript**, and **real-world design decisions**.
 
-## This Assignment from AbleSpace 
-Project Requirement : https://www.dropbox.com/scl/fi/nnw302id5rdxa1jwai03e/AbleSpace_Assignment.pdf?rlkey=edsks48jw1ygypb4u0kro9crs&st=2lgdn8z6&dl=0
+---
 
+## This Assignment from AbleSpace 
+Project Requirement : https://docs.google.com/document/d/1IAuUdNQ5s7jIuj-y24escvFcu2BY-UYnfr-qV73NCd4/edit?tab=t.0
 
 ---
 
