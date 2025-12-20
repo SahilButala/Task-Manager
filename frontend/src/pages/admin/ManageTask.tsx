@@ -8,6 +8,7 @@ import TaskStatusTabs from "../../components/Tabs/TaskStatusTabs";
 import TaskCard from "../../components/Cards/TaskCard";
 import { AppDispatch, RootState } from "../../store";
 import { statusArrayType } from "../../interfaces";
+import Loader from "../../utils/Loader";
 
 const ManageTask = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -107,9 +108,7 @@ const ManageTask = () => {
 
         {/* Content */}
         {isLoading ? (
-          <div className="h-[300px] flex items-center justify-center text-sm text-gray-500">
-            Loading tasks...
-          </div>
+          <Loader/>
         ) : hasTasks ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             {task.tasks.map((tas: any) => (

@@ -8,6 +8,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { apiPaths } from "../../constants";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../utils/Loader";
 
 const ManageUser = () => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -83,9 +84,7 @@ const ManageUser = () => {
 
         {/* Content */}
         {isLoading ? (
-          <div className="h-[300px] flex items-center justify-center text-sm text-gray-500">
-            Loading users...
-          </div>
+          <Loader/>
         ) : hasUsers ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
             {allUsers.map((user) => (
