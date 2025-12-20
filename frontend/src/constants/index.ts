@@ -1,5 +1,5 @@
 export const BASE_URL  = "http://localhost:3000/api/v1"
-export const RENDER_URL = "https://task-manager-backend-cnfm.onrender.com"
+export const RENDER_URL = "https://task-manager-backend-cnfm.onrender.com/api/v1"
 
 export const apiPaths = {
      AUTH : {
