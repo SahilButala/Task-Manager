@@ -61,25 +61,33 @@ const initialState: UserState = {
 // =====================
 export const getLogin = createAsyncThunk(
   "/auth/login",
-  async ({ formdata, navigate }: any) => {
-    const res = await LoginService(formdata);
+  async ({ formdata, navigate, seterror }: any) => {
+    try {
+      const res = await LoginService(formdata);
 
-    if (res?.sucess === true) {
-      const { token, role } = res?.data;
-      toast.success("Login Successfully..");
+      if (res?.sucess === true) {
+        const { token, role } = res?.data;
+        toast.success("Login Successfully..");
 
-      localStorage.setItem("token", token);
+        localStorage.setItem("token", token);
 
-      if (!role) return res;
+        if (!role) return res;
 
-      if (role === "admin") {
-        navigate("/admin/dashboard");
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/user/dashboard");
+        }
+      }
+
+      return res;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        seterror(error.response.data.message);
       } else {
-        navigate("/user/dashboard");
+        seterror("Something went wrong...");
       }
     }
-
-    return res;
   }
 );
 
@@ -126,9 +134,9 @@ const UserSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
-    setEditUserdata : (state , action)=>{
-        state.user = action.payload
-    }
+    setEditUserdata: (state, action) => {
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -165,6 +173,6 @@ const UserSlice = createSlice({
 // =====================
 // Exports
 // =====================
-export const { clearUserData  , setEditUserdata} = UserSlice.actions;
+export const { clearUserData, setEditUserdata } = UserSlice.actions;
 
 export default UserSlice.reducer;

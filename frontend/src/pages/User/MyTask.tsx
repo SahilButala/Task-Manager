@@ -63,31 +63,7 @@ const MyTask = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          {task?.tasks && task?.tasks?.length > 0 ? (
-            task?.tasks?.map((tas) => (
-              <TaskCard
-                key={tas?._id}
-                title={tas?.title}
-                description={tas?.description}
-                priority={tas?.priority}
-                status={tas?.status}
-                progress={tas?.progress}
-                createdAt={tas?.createdAt}
-                dueDate={tas?.dueDate}
-                assignedTo={tas?.assignedTo?.map(
-                  (ass: any) => ass?.profileImageUrl
-                )}
-                attachmentCount={tas?.attachments?.length || 0}
-                completedTodoCount={tas?.completedTodoCount || 0}
-                todoCheckList={tas?.todoChecklist || []}
-                onClick={() => handleClick(tas?._id)}
-              />
-            ))
-          ) : (
-            <></>
-          )}
-        </div>
+
 
           { hasTasks ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">

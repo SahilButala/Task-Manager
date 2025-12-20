@@ -12,18 +12,15 @@ import { AppDispatch, RootState } from "../../store";
 const Login = () => {
   const [error, seterror] = useState<string | null>("");
   const navigate = useNavigate();
-  
 
   const dispatch = useDispatch<AppDispatch>();
-  const {user} = useSelector((state : RootState )=>state.auth)
-
-
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const [formdata, setformdata] = useState({
     email: "",
     password: "",
   });
-  const handleLoginSubmit = async (e : any) => {
+  const handleLoginSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!validateEmail(formdata.email)) {
@@ -32,8 +29,8 @@ const Login = () => {
     }
 
     try {
-      dispatch(getLogin({formdata , navigate}));
-    } catch (error : any) {
+      dispatch(getLogin({ formdata, navigate, seterror }));
+    } catch (error: any) {
       if (error.response && error.response.data.message) {
         seterror(error.response.data.message);
       } else {

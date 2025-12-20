@@ -20,7 +20,7 @@ const EditProfile = () => {
   const [error, seterror] = useState("");
   const dispatch = useDispatch<AppDispatch>()
 
-  const [adminToken, setadminToken] = useState("");
+
 
   const [formdata, setformdata] =
     useState<initialRegisterDataType>(initialRegisterData);

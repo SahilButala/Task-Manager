@@ -15,7 +15,7 @@ const router = express.Router();
 
 
 router.post("/register", RegisterUser);
-router.post("/login", validate(loginDto) , LoginUser);
+router.post("/login" , LoginUser);
 router.get("/profile", protect, getUserProfile);
 router.patch("/:id", protect, validate(updateProfileDto) , updateUserProfile);
 
