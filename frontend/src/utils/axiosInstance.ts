@@ -1,6 +1,7 @@
 import axios from "axios";
-import { BASE_URL } from "../constants/index.js";
-const baseUrl = BASE_URL
+import { BASE_URL , RENDER_URL } from "../constants/index.js";
+// const baseUrl = BASE_URL
+const baseUrl = RENDER_URL
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
