@@ -100,9 +100,9 @@ const Dashboard = () => {
     getdashboardData();
   }, []);
 
-  // if (isLoading) {
-  //   return <Loader />;
-  // }
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <DashboardLayout activeMenue={"Dashboard"}>
