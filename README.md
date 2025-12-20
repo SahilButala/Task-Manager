@@ -178,4 +178,45 @@ Although the assignment recommended **React Query / SWR**, this project uses **R
 - Redux Persist allows state rehydration  
 - Socket.io integrates cleanly with Redux-based state updates  
 
-This was a **deliberate architectural decision**, not a limitation.
+
+
+
+## ✨ Additional Features Implemented From My Side (Beyond Core Requirements)
+
+In addition to the requirements mentioned in the assignment, I implemented the following features to make the system more **scalable and production-ready**:
+
+### 🏢 Tenant-Based (Multi-Company) Architecture
+
+- Implemented a **tenant-based architecture** where multiple companies can use the same application instance.
+- During **user sign-in / registration**, users are associated with a specific **company (tenant)**.
+- A unique `tenantId` is used to segregate data across:
+  - Users
+  - Tasks
+  - Notifications
+- All API operations are scoped using `tenantId`, ensuring **strict data isolation** between companies.
+
+This approach enables a **SaaS-style system**, preventing cross-company data access.
+
+---
+
+### 👥 Admin-Driven User Creation (Per Tenant)
+
+- Added a **Create User** feature for admins.
+- Admins can create users **only within their own company (tenant)**.
+- Newly created users automatically inherit the admin’s `tenantId`.
+- This ensures:
+  - Secure user onboarding
+  - Controlled access management
+  - Company-level data separation
+
+---
+
+### 🎯 Why This Was Added
+
+These features were intentionally implemented to:
+- Support real-world multi-organization usage
+- Improve scalability and security
+- Align the system with enterprise-level SaaS requirements
+
+This enhancement goes beyond the assignment’s core scope while maintaining clean architecture and performance.
+
