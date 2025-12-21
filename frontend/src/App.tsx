@@ -53,6 +53,16 @@ const App = () => {
         );
         dispatch(incrementCount());
       });
+
+      socket.on("task:created", (data) => {
+        dispatch(
+          setNotificationData({
+            task: data?.task,
+            type: data?.action === "TASK_CREATED" ? "created" : null,
+          })
+        );
+        dispatch(incrementCount());
+      });
     }
 
     return () => {

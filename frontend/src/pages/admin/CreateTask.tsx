@@ -26,8 +26,6 @@ const CreateTask = () => {
 
   const navigate = useNavigate();
 
-  console.log(taskId, "taskId");
-
   const [currentTask, setcurrentTask] = useState(null);
 
   const [error, seterror] = useState<string | null>("");
@@ -131,7 +129,8 @@ const CreateTask = () => {
 
   const deleteTaskById = async (taskId: string) => {
     try {
-      // deleteTaskByIdService
+      console.log("s'a''a''a''a", taskId);
+      deleteTaskByIdService;
 
       if (!taskId) return;
 
@@ -209,14 +208,12 @@ const CreateTask = () => {
 
               {taskId && (
                 <button
-                  className="flex items-center gap-1.5 text-[13px] font-medium text-rose-500 bg-red-50 rounded px-2 py-1 border border-rose-100  hover:border-rose-300 cursor-pointer z-20"
-                  onClick={() => setopenDialogAlert(true)}
+                  className="flex items-center gap-1.5 text-[13px] font-medium text-rose-500 bg-red-50 rounded px-2 py-1 border border-rose-100  hover:border-rose-300 cursor-pointer z-10"
+                  onClick={() => {
+                    setopenDialogAlert(true), deleteTaskById(taskId);
+                  }}
                 >
-                  <LuTrash2
-                    onClick={() => deleteTaskById(taskId)}
-                    className="text-base"
-                  />{" "}
-                  Delete
+                  <LuTrash2 className="text-base" /> Delete
                 </button>
               )}
             </div>

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import TaskStatusTabs from "../../components/Tabs/TaskStatusTabs";
 import TaskCard from "../../components/Cards/TaskCard";
 import { AppDispatch, RootState } from "../../store";
-import { statusArrayType } from "../../interfaces";
+import { statusArrayType } from "../../interfaces"; 
 
 const MyTask = () => {
   const handleDownloadReport = () => {};

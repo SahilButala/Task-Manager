@@ -326,11 +326,15 @@ const createTask = catchAsync(async (req: Request, res: Response) => {
     io.to(userId.toString()).emit("notification", notification);
   }
 
-  io.emit("task:updated", {
-    action: "TASK_CREATED",
-    taskId: task._id,
-    task,
-  });
+  if (task.assignedTo?.length) {
+    task.assignedTo.forEach((user: any) => {
+      io.to(user._id.toString()).emit("task:created", {
+        action: "TASK_CREATED",
+        taskId: task._id,
+        task,
+      });
+    });
+  }
 
   res.status(201).json(new ApiRes(true, "Task created successfully..", task));
 });
