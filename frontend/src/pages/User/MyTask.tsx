@@ -41,8 +41,9 @@ const MyTask = () => {
 
     const hasTasks = task?.tasks && task.tasks.length > 0;
   console.log(filterData, "aaa");
-  const handleClick = (id: any) => {
-    navigate(`/user/details/${id}`);
+  const handleClick = (data: any) => {
+ 
+    navigate(`/user/details/${data?._id}` , {state : {id : data?._id}});
   };
 
   useEffect(() => {

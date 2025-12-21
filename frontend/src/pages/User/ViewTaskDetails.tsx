@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Task } from "../../interfaces";
 import { getTaskByIdService, updateTodoCheckListService } from "../../api";
 import { toast } from "react-toastify";
@@ -9,7 +9,9 @@ import AvatarGroup from "../../helper/Avatar/AvatarGroup";
 import { LuSquareArrowUpRight } from "react-icons/lu";
 
 const ViewTaskDetails = () => {
-  const { id } = useParams();
+  const location = useLocation()
+
+ const {id} = location.state || null  
   const [task, settask] = useState<Task>();
 
   const getStatusTagColor = (status: string) => {
@@ -27,6 +29,7 @@ const ViewTaskDetails = () => {
   const getDetailsById = async () => {
     try {
       if (id) {
+        console.log(id , "bdhagduagdugda")
         const res = await getTaskByIdService(id);
         if (res?.sucess) {
           settask(res?.data);
