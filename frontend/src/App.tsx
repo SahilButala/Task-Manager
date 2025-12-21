@@ -55,6 +55,7 @@ const App = () => {
       });
 
       socket.on("task:created", (data) => {
+
         dispatch(
           setNotificationData({
             task: data?.task,

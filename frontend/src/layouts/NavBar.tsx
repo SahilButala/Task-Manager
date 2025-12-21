@@ -205,7 +205,61 @@ const NavBar = ({ activeMenue }: NavBarProps): JSX.Element => {
                       </div>
                     </div>
                   ) : (
-                    <div></div>
+                   <div>
+                      <div className="text-xs font-medium text-green-500">
+                        New Task
+                      </div>
+
+                      <div className="flex items-center justify-between ">
+                        <div className="text-[13px] font-medium text-gray-500 mt-2">
+                          {task?.title}
+                        </div>
+
+                        <div className="text-xs underline">
+                          Due date :{" "}
+                          {task?.dueDate
+                            ? moment(task?.dueDate).format("Do MMM YYYY")
+                            : null}
+                        </div>
+                      </div>
+
+                      <div className="grid-cols-1 md:grid-cols-2 gap-3 grid mt-2">
+                        <div
+                          className={`text-[11px]  font-medium   ${getPriorityTagColor(
+                            task?.priority
+                          )} px-4 py-0.5 rounded`}
+                        >
+                          Priority : {task?.priority}
+                        </div>
+
+                        <div
+                          className={`text-[11px]  font-medium  ${getStatusTagColor(
+                            task?.status
+                          )} px-4 py-0.5 rounded`}
+                        >
+                          Status : {task?.status}
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end">
+                        <div className="text-[10px] mt-3   ">
+                          Created At :
+                          {task?.createdAt
+                            ? moment(task?.createdAt).format("Do MMM YYYY")
+                            : null}
+                        </div>
+                      </div>
+                      <div className="flex justify-start">
+                        <div className="text-[10px] mt-3   capitalize font-medium">
+                          Created By : {task?.createdBy?.name}
+                        </div>
+                      </div>
+                      <div className="flex justify-start">
+                        <div className="text-[10px] mt-1 text-gray-400">
+                          {moment(item.createdAt).fromNow(true)} ago
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               );

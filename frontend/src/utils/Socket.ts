@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const initSocket = (userId: string): Socket => {
   if (!socket) {
-    socket = io(import.meta.env.VITE_BACKEND_URL_RENDER as string, {
+    socket = io(import.meta.env.VITE_BACKEND_URL as string, {
       withCredentials: true,
     });
 
