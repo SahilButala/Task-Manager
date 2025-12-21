@@ -51,7 +51,7 @@ const Notifications = ({
         {/* Content */}
         <div className="p-5 overflow-y-auto h-[calc(100%-64px)]">
           <p className="text-[10px] font-semibold text-gray-500 flex justify-end">
-            After 5 days notification will disapear
+             Once you log out then Notification will dissappear
           </p>
           {children}
         </div>
